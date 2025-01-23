@@ -76,9 +76,6 @@ export default {
           max: '400px',
         },
       },
-      colors: {
-        dark: '#201F24',
-      },
     },
   },
   plugins: [],
