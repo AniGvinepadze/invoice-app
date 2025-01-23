@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+// import SideBar from "./components/organsms/SideBar/SideBar";
+// import MainSidebar from "./components/organsms/SideBar/MainSidebar";
 import SideBar from "./components/organsms/SideBar/SideBar";
 
 const geistSans = Geist({
@@ -28,9 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F8F4F0] text-black `}
       >
-            <SideBar/>
+        <div className="flex justify-between">
+        <SideBar />
         {children}
-     
+        </div>
       </body>
     </html>
   );

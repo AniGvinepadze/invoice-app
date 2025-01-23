@@ -37,3 +37,27 @@ export const sidebar = [
     route: "/recurringBills",
   },
 ];
+
+export type BalancesType = {
+  id: number;
+  title: string;
+  budget: string;
+};
+
+export const balances: BalancesType[] = [
+  {
+    id: 1,
+    title: "Current Balance",
+    budget: "$4,836.00",
+  },
+  {
+    id: 2,
+    title: "Income",
+    budget: "$3,814.25",
+  },
+  {
+    id: 3,
+    title: "Expenses",
+    budget: "$1,700.50",
+  },
+];
