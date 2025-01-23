@@ -1,15 +1,16 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
 export default {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+
   theme: {
     extend: {
       fontFamily: {
-        publicSans: ["Public Sans", "sans-serif"],
+        publicSans: ['Public Sans', 'sans-serif'],
       },
       screens: {
         'max-1400': {
@@ -75,6 +76,9 @@ export default {
         'max-400': {
           max: '400px',
         },
+      },
+      backgroundColor: {
+        'new-budget': 'rgba(0, 0, 0, 0.5)',
       },
     },
   },
