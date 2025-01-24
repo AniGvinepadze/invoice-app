@@ -10,7 +10,7 @@ export default function HomePageBalance() {
 
       <div className="flex justify-between gap-3 my-10 ">
         {balances.map((el, index) => (
-          <div key={el.id} className="w-[300px]">
+          <div key={el.id} className="max-w-[300px] w-full  ">
             <div
               className={`w-full rounded-xl p-4 ${
                 index === 0 ? "bg-[#201F24] text-white" : "bg-white"
