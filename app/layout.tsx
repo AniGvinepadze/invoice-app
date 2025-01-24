@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F8F4F0] text-black flex `}
       >
-        <div className="flex justify-between gap-5">
+        <div className="flex justify-between">
           <SideBar />
           {children}
         </div>

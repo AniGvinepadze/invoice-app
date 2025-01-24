@@ -8,7 +8,7 @@ export default function HomePageBalance() {
         <h2 className="font-bold text-[32px]">Overview</h2>
       </div>
 
-      <div className="flex justify-between gap-3 mt-10 ">
+      <div className="flex justify-between gap-3 my-10 ">
         {balances.map((el, index) => (
           <div key={el.id} className="w-[300px]">
             <div

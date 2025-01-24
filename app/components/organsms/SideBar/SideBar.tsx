@@ -18,7 +18,7 @@ export default function SideBar() {
     <>
       <div>
         {isOpen ? (
-          <div className="min-w-[300px] w-full h-screen rounded-tr-3xl rounded-br-3xl bg-[#201F24] text-[#B3B3B3]">
+          <div className="min-w-[300px] w-full rounded-tr-3xl rounded-br-3xl bg-[#201F24] text-[#B3B3B3]">
             <div className="p-7">
               <h2 className="font-extrabold text-[32px] text-white">finance</h2>
             </div>
@@ -56,7 +56,7 @@ export default function SideBar() {
             </div>
           </div>
         ) : (
-          <div className="min-w-[300px] w-full h-screen rounded-tr-3xl rounded-br-3xl bg-[#201F24] text-[#B3B3B3]">
+          <div className="min-w-[300px] w-full h-full rounded-tr-3xl rounded-br-3xl bg-[#201F24] text-[#B3B3B3]">
             <div className="p-7">
               <h2 className="font-extrabold text-[32px] text-white">finance</h2>
             </div>
