@@ -15,6 +15,7 @@ import colorTag1 from "../public/assets/Color Tag (1).svg";
 import colorTag2 from "../public/assets/Color Tag (2).svg";
 import colorTag3 from "../public/assets/Color Tag (3).svg";
 import colorTag4 from "../public/assets/Color Tag (4).svg";
+import minimizeBtn from "../public/assets/minimizeBtn.svg"
 
 export {
   loginImg,
@@ -33,4 +34,5 @@ export {
   colorTag2,
   colorTag3,
   colorTag4,
+  minimizeBtn
 };
