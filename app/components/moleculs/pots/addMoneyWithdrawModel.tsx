@@ -13,8 +13,8 @@ interface IPot {
 interface AddWithdrawModalProps {
   title: string;
   pot: IPot;
-  handleNewTotal: React.Dispatch<React.SetStateAction<number>>;
-  newTotal: number;
+  handleNewTotal: React.Dispatch<React.SetStateAction<number | undefined>>;
+  newTotal: number | undefined;
 }
 
 const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
@@ -26,10 +26,12 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
   const [model, setModel] = useState(false);
   const [inputAmount, setInputAmount] = useState<number | null>();
 
-  const percenteg = Number((100 * newTotal) / pot.target).toFixed(2);
+  const percenteg = Number(
+    (100 * (newTotal ? newTotal : pot.total)) / pot.target
+  ).toFixed(2);
   const newNum: number = title.startsWith('Withdraw')
-    ? +newTotal - Number(inputAmount)
-    : +newTotal + Number(inputAmount);
+    ? +(newTotal ? newTotal : pot.total) - Number(inputAmount)
+    : +(newTotal ? newTotal : pot.total) + Number(inputAmount);
 
   const [newPercent, setNewPercent] = useState<number | null | undefined>();
 
