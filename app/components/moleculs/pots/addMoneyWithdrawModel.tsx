@@ -32,13 +32,11 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
     : +newTotal + Number(inputAmount);
 
   const [newPercent, setNewPercent] = useState<number | null | undefined>();
-  console.log(newNum, 'number');
 
   useEffect(() => {
     setNewPercent(Number((100 * newNum) / pot.target));
   }, [newNum]);
-  console.log(newPercent, 'percent');
-  console.log(newNum, 'num');
+
   const colorMap: Record<string, string> = {
     '#277C78': 'bg-green-700',
     '#626070': 'bg-gray-600',
@@ -48,43 +46,40 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
   };
 
   const handleSubmit = () => {
-    if (inputAmount && inputAmount <= 0) {
+    if (!inputAmount || inputAmount <= 0) {
       alert('Invalid amount');
-      return setInputAmount(null);
-    }
-    if (title.startsWith('Withdraw')) {
-      if (inputAmount && inputAmount > pot.total) {
-        alert('Withdrawal amount exceeds total saved');
-        return setInputAmount(null);
-      }
-      if (inputAmount && inputAmount <= pot.total) {
-        const newNum = (pot.total = pot.total - inputAmount);
-        setInputAmount(null);
-        setNewPercent(null);
-        console.log(newNum, 'withdraw');
-        return handleNewTotal(newNum);
-      }
+      setInputAmount(null);
+      return;
     }
 
-    if (inputAmount) {
-      const newNum = (pot.total += inputAmount);
-      console.log('deposit');
-      setInputAmount(null);
-      return handleNewTotal(newNum);
+    if (title.startsWith('Withdraw')) {
+      if (inputAmount > pot.total) {
+        alert('Withdrawal amount exceeds total saved');
+        setInputAmount(null);
+        return;
+      }
+      const updatedTotal = pot.total - inputAmount;
+      handleNewTotal(updatedTotal);
+    } else {
+      const updatedTotal = pot.total + inputAmount;
+      handleNewTotal(updatedTotal);
     }
+
+    setInputAmount(null);
+    setNewPercent(null);
   };
+
   const value = +percenteg > 100 ? 100 : +percenteg;
   const newPercentVal = newPercent
     ? +newPercent.toFixed(2) > 100
       ? 100
       : newPercent
     : null;
-  console.log(newPercentVal, '"percent');
 
   return (
     <>
       <button
-        className='bg-[#f8f4f0] w-full  hover:bg-white  text-normal font-bold text-[#201f24] flex justify-center p-[16px] rounded-lg cursor-pointer border border-[#f8f4f0]  hover:border-[#98908b] transition-colors ease-in-out duration-500 leading-[27px]'
+        className='bg-[#f8f4f0] w-full  hover:bg-white  text-[12px] md:text-[14px] md:leading-5 font-bold text-[#201f24] flex justify-center py-[16px] rounded-lg cursor-pointer border border-[#f8f4f0]  hover:border-[#98908b] transition-colors ease-in-out duration-500 xl:leading-[27px]'
         type='button'
         onClick={() => setModel(true)}
       >
@@ -92,15 +87,17 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
       </button>
       {model && (
         <div
-          className={`fixed inset-0 z-20  flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ${
-            model ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
+          className={cn(
+            'fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300',
+            { 'opacity-100': model, 'opacity-0 pointer-events-none': !model }
+          )}
           onClick={() => setModel(false)}
         >
           <div
-            className={`bg-white max-w-[560px] w-full p-8 rounded-lg shadow-lg transition-transform duration-300 transform ${
-              model ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-            }`}
+            className={cn(
+              'bg-white max-w-[560px] w-full p-8 rounded-lg shadow-lg transition-transform duration-300 transform',
+              { 'scale-100 opacity-100': model, 'scale-95 opacity-0': !model }
+            )}
             onClick={(e) => e.stopPropagation()}
           >
             <div className='flex justify-between'>
@@ -118,7 +115,7 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
                   Total Saved
                 </span>
                 <span className='font-bold text-3xl text-[#201f24]'>
-                  $ {newNum}
+                  $ {pot.total}
                 </span>
               </div>
               <div className='mt-4'>
@@ -225,6 +222,10 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
                     placeholder=''
                     value={inputAmount ? inputAmount : ''}
                     onChange={(e) => setInputAmount(Number(e.target.value))}
+                    min={0}
+                    max={
+                      title.startsWith('Withdraw') ? +pot.total : +pot.target
+                    }
                   />
                 </label>
               </div>
