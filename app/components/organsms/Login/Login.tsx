@@ -6,10 +6,10 @@ import LoginHeader from "../../atoms/LoginHeader/LoginHeader";
 const Login = () => {
   return (
     <>
-    <div>
+    <div className="max-[900px] w-full">
         <LoginHeader/>
       </div>
-        <div className="flex justify-between p-3">
+        <div className="max-w-[1440px] w-full flex p-3 gap-10">
       <LogingIcon />
       <LoginFormFields />
     </div>
