@@ -1,12 +1,9 @@
+'use client';
 
-"use client";
-
-
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import SideBar from "./components/organsms/SideBar/SideBar";
-import { usePathname } from "next/navigation";
-
+import { Geist, Geist_Mono } from 'next/font/google';
+import './globals.css';
+import SideBar from './components/organsms/SideBar/SideBar';
+import { usePathname } from 'next/navigation';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -18,8 +15,6 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,19 +22,17 @@ export default function RootLayout({
 }>) {
   const pathName = usePathname();
 
-  const excludeSideBar = ["/login", "/signUp"];
+  const excludeSideBar = ['/login', '/signUp'];
 
   return (
     <html lang='en'>
       <body
-
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F8F4F0] text-[#201F24] flex `}
       >
-        <div className="flex justify-between gap-5 max-w-[1440px] w-full">
+        <div className='flex justify-between gap-5 max-w-[1440px] w-full'>
           {!excludeSideBar.includes(pathName) && <SideBar />}
           {children}
         </div>
-
       </body>
     </html>
   );
