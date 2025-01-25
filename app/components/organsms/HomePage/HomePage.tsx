@@ -1,3 +1,4 @@
+
 import HomePageBalance from "./HomePageBalance";
 import HomePageBudget from "./HomePageBudget";
 import HomePagePots from "./HomePagePots";
@@ -20,4 +21,5 @@ export default function HomePage() {
       </div>
     </div>
   );
+
 }

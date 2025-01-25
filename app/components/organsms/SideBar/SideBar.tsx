@@ -1,4 +1,5 @@
-"use client";
+'use client';
+
 
 import { minimizeBtn } from "@/app";
 import { sidebar } from "@/app/map";
@@ -6,6 +7,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+
+
 
 export default function SideBar() {
   const pathName = usePathname();
@@ -16,6 +19,7 @@ export default function SideBar() {
   };
 
   return (
+
     <div>
       <div
         className={`h-full bg-[#201F24] text-[#B3B3B3] rounded-tr-3xl rounded-br-3xl transition-all duration-700 ease-in-out max-1050:hidden ${
@@ -78,7 +82,7 @@ export default function SideBar() {
                 height={24}
                 className={`transition-transform ease-in-out duration-1000 ${
                   isOpen ? "" : "rotate-180"
-                }`}
+    
               />
               <p
                 className={`font-bold text-[#848484] text-base transition-opacity duration-500 mx-4 ease-in-out ${
@@ -86,12 +90,13 @@ export default function SideBar() {
                 } whitespace-nowrap overflow-hidden`}
                 style={{ width: isOpen ? "auto" : "0px" }}
               >
+
                 {isOpen ? "Minimize Menu" : ""}
               </p>
             </button>
           </div>
         </div>
- 
+
     </div>
   );
 }
