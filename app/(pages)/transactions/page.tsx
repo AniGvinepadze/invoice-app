@@ -1,25 +1,29 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import data from '../../local.json';
+import React, { useEffect, useState, useMemo } from 'react';
+import data from '../../transactions';
+import { BillType } from '@/app/bills';
+
+interface Account {
+  name: string;
+  category: string;
+  transaction_date: string;
+  amount: string;
+  icon?: React.ReactNode;
+}
 
 export default function Transition() {
-  const [accounts, setAccounts] = useState([]);
-  const [filteredAccounts, setFilteredAccounts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('Latest');
-  const [category, setCategory] = useState('All Transactions');
-  const [transactionType, setTransactionType] = useState('All');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [accounts, setAccounts] = useState<Account[]>(data);
+  const [filteredAccounts, setFilteredAccounts] = useState<Account[]>(data);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [sortBy, setSortBy] = useState<string>('Latest');
+  const [category, setCategory] = useState<string>('All Transactions');
+  const [transactionType, setTransactionType] = useState<string>('All');
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const rowsPerPage = 10;
 
-  useEffect(() => {
-    setAccounts(data);
-    setFilteredAccounts(data);
-  }, []);
-
-  useEffect(() => {
-    let filtered = accounts;
+  const filteredData = useMemo(() => {
+    let filtered = [...accounts];
 
     if (searchTerm) {
       filtered = filtered.filter((account) =>
@@ -42,12 +46,16 @@ export default function Transition() {
     switch (sortBy) {
       case 'Latest':
         filtered.sort(
-          (a, b) => new Date(b.transaction_date) - new Date(a.transaction_date)
+          (a, b) =>
+            new Date(b.transaction_date).getTime() -
+            new Date(a.transaction_date).getTime()
         );
         break;
       case 'Oldest':
         filtered.sort(
-          (a, b) => new Date(a.transaction_date) - new Date(b.transaction_date)
+          (a, b) =>
+            new Date(a.transaction_date).getTime() -
+            new Date(b.transaction_date).getTime()
         );
         break;
       case 'A to Z':
@@ -59,43 +67,45 @@ export default function Transition() {
       case 'Lowest':
         filtered.sort(
           (a, b) =>
-            parseFloat(b.amount.replace('$', '')) -
-            parseFloat(a.amount.replace('$', ''))
+            parseFloat(a.amount.replace(/[^0-9.-]+/g, '')) -
+            parseFloat(b.amount.replace(/[^0-9.-]+/g, ''))
         );
         break;
       case 'Highest':
         filtered.sort(
           (a, b) =>
-            parseFloat(a.amount.replace('$', '')) -
-            parseFloat(b.amount.replace('$', ''))
+            parseFloat(b.amount.replace(/[^0-9.-]+/g, '')) -
+            parseFloat(a.amount.replace(/[^0-9.-]+/g, ''))
         );
         break;
       default:
         break;
     }
 
-    setFilteredAccounts(filtered);
+    return filtered;
+  }, [accounts, searchTerm, sortBy, category, transactionType]);
+
+  useEffect(() => {
+    setFilteredAccounts(filteredData);
     setCurrentPage(1);
-  }, [searchTerm, sortBy, category, transactionType, accounts]);
+  }, [filteredData]);
 
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = filteredAccounts.slice(indexOfFirstRow, indexOfLastRow);
   const totalPages = Math.ceil(filteredAccounts.length / rowsPerPage);
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page: number) => {
     if (page > 0 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
 
   return (
-    <>
-      <div className='flex flex-col items-center'>
-        <div>
-          <h2>Transactions</h2>
-        </div>
-        <div className='flex items-center justify-between w-full mb-4 p-4 bg-white rounded-md shadow-md'>
+    <div className='flex flex-col items-center mx-auto '>
+      <h2 className='font-bold text-[32px] p-4 w-full'>Transactions</h2>
+      <div className='bg-white max-w-[1060px] w-full rounded-md shadow-md max-h-[960px] h-full overflow-y-auto p-4'>
+        <div className='flex items-center justify-between w-full mb-4 p-4  rounded-md shadow-md'>
           <div className='flex items-center border rounded-lg px-3 py-2'>
             <input
               type='text'
@@ -133,9 +143,9 @@ export default function Transition() {
               <option value='All Transactions'>All Transactions</option>
               {Array.from(
                 new Set(accounts.map((account) => account.category))
-              ).map((category, index) => (
-                <option key={index} value={category}>
-                  {category}
+              ).map((cat, index) => (
+                <option key={index} value={cat}>
+                  {cat}
                 </option>
               ))}
             </select>
@@ -219,6 +229,6 @@ export default function Transition() {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

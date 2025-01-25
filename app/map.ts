@@ -34,6 +34,6 @@ export const sidebar = [
     title: 'Recurring bills',
     img: recurringBills,
     activeImg: activeBils,
-    route: '/recurringBills',
+    route: '/recurringbills',
   },
 ];
