@@ -6,7 +6,7 @@ import { pot } from "@/app/map";
 
 export default function HomePagePots() {
   return (
-    <div className="max-w-[528px] w-full bg-white roundedxl p-7 rounded-xl ">
+    <div className="max-w-[1000px] w-full bg-white p-7 rounded-xl ">
       <div className="flex justify-between">
         <p className="font-bold text-xl ">Pots</p>
         <Link href="/pots">
@@ -15,15 +15,15 @@ export default function HomePagePots() {
           </p>
         </Link>
       </div>
-      <div className="flex justify-between gap-10">
-        <div className="max-w-[167px] w-full bg-[#F8F4F0] rounded-xl flex px-2 py-3 my-5 ">
+      <div className="flex justify-between   max-600:flex-col">
+        <div className="max-w-[417px] w-full bg-[#F8F4F0] rounded-xl flex px-2 py-3 my-5 ">
           <div>
             <Image
               src={dollarIcon}
               alt="dollarIcon"
               width={35}
               height={35}
-              className="mt-3"
+              className="mt-4"
             />
           </div>
           <div className="mx-2">
@@ -31,12 +31,12 @@ export default function HomePagePots() {
             <p className="font-bold text-[32px] my-1">$850</p>
           </div>
         </div>
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-2 max-w-[400px] w-full ">
           {pot.map((el) => (
-            <div key={el.id} className="max-w-[120px] w-full flex">
+            <div key={el.id} className="max-w-[130px] w-full flex px-5 ">
               <Image src={el.img} alt={el.title} width={4} height={73} />
 
-              <div className="flex flex-col mx-4 mt-3">
+              <div className="flex flex-col  mt-1 px-3 max-1050:px-5 ">
                 <p className="font-normal text-xs my-1 text-[#696868]">
                   {el.title}
                 </p>
