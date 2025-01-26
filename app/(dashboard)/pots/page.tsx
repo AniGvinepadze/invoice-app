@@ -9,7 +9,7 @@ function Pots() {
     console.log(pots, 'set');
   }, [pots]);
   return (
-    <div className='px-10  pt-8 pb-[48px] w-full h-screen'>
+    <div className='px-10  pt-8 pb-[48px] w-full overflow-x-hidden overflow-scroll h-screen'>
       <div className='flex justify-between items-center'>
         <h1 className='font-bold text-3xl'>Pots</h1>
         <BudgetModal handleSetPots={setPots} />

@@ -16,6 +16,10 @@ import colorTag2 from "../public/assets/Color Tag (2).svg";
 import colorTag3 from "../public/assets/Color Tag (3).svg";
 import colorTag4 from "../public/assets/Color Tag (4).svg";
 import minimizeBtn from "../public/assets/minimizeBtn.svg"
+import search from "../public/assets/search.svg"
+import filter1 from "../public/assets/filter1.svg"
+import filter2 from "../public/assets/filer2.svg"
+
 
 export {
   loginImg,
@@ -34,5 +38,8 @@ export {
   colorTag2,
   colorTag3,
   colorTag4,
-  minimizeBtn
+  minimizeBtn,
+  search,
+  filter1,
+  filter2
 };

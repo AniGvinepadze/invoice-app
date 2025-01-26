@@ -66,7 +66,7 @@ export default function SideBar() {
           })}
         </div>
 
-        <div className="mt-10">
+        <div className="mt-72">
           <button
             onClick={handleIsOpen}
             className=" text-white py-2 px-4 rounded transition-transform duration-300 hover:scale-105 flex mx-2 "
