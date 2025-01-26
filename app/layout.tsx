@@ -8,6 +8,7 @@ import SideBar from "./components/organsms/SideBar/SideBar";
 import { usePathname } from "next/navigation";
 
 
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -17,6 +18,7 @@ const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
 });
+
 
 
 
@@ -35,8 +37,10 @@ export default function RootLayout({
 
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F8F4F0] text-[#201F24] flex `}
       >
+
         <div className="flex justify-between gap-5 max-w-[1440px] w-full">
           {!excludeSideBar.includes(pathName) && <SideBar />}
+
           {children}
         </div>
 
