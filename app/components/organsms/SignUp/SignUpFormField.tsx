@@ -15,7 +15,7 @@ export default function SignUpFormFields() {
   };
 
   return (
-    <div className=" max-w-[550px] w-full mt-32 mx-32 max-1300:mx-28 max-1200:mx-24 max-1100:mx-20 max-1000:mx-10 max-900:mx-32 max-800:mx-28 max-600:mx-10 max-500:mx-6">
+    <div className="max-w-[600px] w-full m-32 max-1200:m-20 max-1100:m-16">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="shadow-md min-h-[422px] bg-white rounded-xl p-6 text-[#696868]"
