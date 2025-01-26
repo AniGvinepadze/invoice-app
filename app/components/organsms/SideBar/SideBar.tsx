@@ -81,8 +81,7 @@ export default function SideBar() {
                 width={24}
                 height={24}
                 className={`transition-transform ease-in-out duration-1000 ${
-                  isOpen ? "" : "rotate-180"
-    
+                  isOpen ? "" : "rotate-180"}`}
               />
               <p
                 className={`font-bold text-[#848484] text-base transition-opacity duration-500 mx-4 ease-in-out ${
@@ -96,6 +95,7 @@ export default function SideBar() {
             </button>
           </div>
         </div>
+   
 
     </div>
   );
