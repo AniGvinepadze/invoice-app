@@ -3,6 +3,7 @@ import { Progress } from '@/components/ui/progress';
 import React, { useEffect, useState } from 'react';
 import data from '@/data.json';
 import { cn } from '@/lib/utils';
+
 interface IPot {
   name: string;
   target: number;
@@ -23,21 +24,23 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
   handleNewTotal,
   newTotal,
 }) => {
-  const [model, setModel] = useState(false);
-  const [inputAmount, setInputAmount] = useState<number | null>();
+  const [isOpen, setIsOpen] = useState(false);
+  const [inputAmount, setInputAmount] = useState<number | null>(null);
 
-  const percenteg = Number(
+  const percentage = Number(
     (100 * (newTotal ? newTotal : pot.total)) / pot.target
   ).toFixed(2);
-  const newNum: number = title.startsWith('Withdraw')
+  const newAmount: number = title.startsWith('Withdraw')
     ? +(newTotal ? newTotal : pot.total) - Number(inputAmount)
     : +(newTotal ? newTotal : pot.total) + Number(inputAmount);
 
-  const [newPercent, setNewPercent] = useState<number | null | undefined>();
+  const [newPercentage, setNewPercentage] = useState<number | null | undefined>(
+    null
+  );
 
   useEffect(() => {
-    setNewPercent(Number((100 * newNum) / pot.target));
-  }, [newNum]);
+    setNewPercentage(Number((100 * newAmount) / pot.target));
+  }, [newAmount]);
 
   const colorMap: Record<string, string> = {
     '#277C78': 'bg-green-700',
@@ -68,37 +71,37 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
     }
 
     setInputAmount(null);
-    setNewPercent(null);
+    setNewPercentage(null);
   };
 
-  const value = +percenteg > 100 ? 100 : +percenteg;
-  const newPercentVal = newPercent
-    ? +newPercent.toFixed(2) > 100
+  const value = +percentage > 100 ? 100 : +percentage;
+  const newPercentageValue = newPercentage
+    ? +newPercentage.toFixed(2) > 100
       ? 100
-      : newPercent
+      : newPercentage
     : null;
 
   return (
     <>
       <button
-        className='bg-[#f8f4f0] w-full  hover:bg-white  text-[12px] md:text-[14px] md:leading-5 font-bold text-[#201f24] flex justify-center py-[16px] rounded-lg cursor-pointer border border-[#f8f4f0]  hover:border-[#98908b] transition-colors ease-in-out duration-500 xl:leading-[27px]'
+        className='bg-[#f8f4f0] w-full hover:bg-white text-[12px] md:text-[14px] md:leading-5 font-bold text-[#201f24] flex justify-center py-[16px] rounded-lg cursor-pointer border border-[#f8f4f0] hover:border-[#98908b] transition-colors ease-in-out duration-500 xl:leading-[27px]'
         type='button'
-        onClick={() => setModel(true)}
+        onClick={() => setIsOpen(true)}
       >
         {title}
       </button>
-      {model && (
+      {isOpen && (
         <div
           className={cn(
             'fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300',
-            { 'opacity-100': model, 'opacity-0 pointer-events-none': !model }
+            { 'opacity-100': isOpen, 'opacity-0 pointer-events-none': !isOpen }
           )}
-          onClick={() => setModel(false)}
+          onClick={() => setIsOpen(false)}
         >
           <div
             className={cn(
               'bg-white max-w-[560px] w-full p-8 rounded-lg shadow-lg transition-transform duration-300 transform',
-              { 'scale-100 opacity-100': model, 'scale-95 opacity-0': !model }
+              { 'scale-100 opacity-100': isOpen, 'scale-95 opacity-0': !isOpen }
             )}
             onClick={(e) => e.stopPropagation()}
           >
@@ -113,7 +116,7 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
             </p>
             <div>
               <div className='flex mt-[42px] justify-between'>
-                <span className='font-normal text-sm text-[#696868] '>
+                <span className='font-normal text-sm text-[#696868]'>
                   Total Saved
                 </span>
                 <span className='font-bold text-3xl text-[#201f24]'>
@@ -121,11 +124,6 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
                 </span>
               </div>
               <div className='mt-4'>
-                {/* <Progress
-                  value={+value}
-                  aria-valuenow={30}
-                  className={`${colorMap[pot.theme]}`}
-                /> */}
                 <div
                   className={cn(
                     'relative h-2 w-full overflow-hidden rounded-full bg-[#f8f4f0]'
@@ -146,7 +144,7 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
                       )}
                       style={{
                         transform: `translateX(-${
-                          100 - (newPercentVal ? +newPercentVal : 0)
+                          100 - (newPercentageValue ? +newPercentageValue : 0)
                         }%)`,
                       }}
                     ></div>
@@ -157,32 +155,24 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
                       )}
                       style={{
                         transform: `translateX(-${
-                          100 - (newPercentVal ? +newPercentVal : 0)
+                          100 - (newPercentageValue ? +newPercentageValue : 0)
                         }%)`,
                       }}
                     ></div>
                   )}
-                  <div
-                    className={cn(
-                      `h-full w-full absolute z-20  top-0  bg-[#277c78] transition-all `
-                    )}
-                    style={{
-                      transform: `translateX(-${
-                        100 - (newPercentVal ? +newPercentVal : 0)
-                      }%)`,
-                    }}
-                  ></div>
                 </div>
                 {title.startsWith('Withdraw') ? (
                   <div className='flex justify-between mt-[13px]'>
                     <span
                       className={`font-bold text-[12px] leading-[18px] text-[#696868] ${
-                        Number(newPercent) ? 'text-[#c94736]' : 'text-[#696868]'
+                        Number(newPercentage)
+                          ? 'text-[#c94736]'
+                          : 'text-[#696868]'
                       }`}
                     >
-                      {Number(newPercent)
-                        ? Number(newPercent).toFixed(2)
-                        : +percenteg}{' '}
+                      {Number(newPercentage)
+                        ? Number(newPercentage).toFixed(2)
+                        : +percentage}{' '}
                       %
                     </span>
 
@@ -194,12 +184,14 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
                   <div className='flex justify-between mt-[13px]'>
                     <span
                       className={`font-bold text-[12px] leading-[18px] text-[#696868] ${
-                        Number(newPercent) ? 'text-[#277c78]' : 'text-[#696868]'
+                        Number(newPercentage)
+                          ? 'text-[#277c78]'
+                          : 'text-[#696868]'
                       }`}
                     >
-                      {Number(newPercent)
-                        ? Number(newPercent).toFixed(2)
-                        : +percenteg}{' '}
+                      {Number(newPercentage)
+                        ? Number(newPercentage).toFixed(2)
+                        : +percentage}{' '}
                       %
                     </span>
 
@@ -236,7 +228,7 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
               type='button'
               className='mt-4 bg-[#201f24] w-full text-white p-2 rounded'
               onClick={() => {
-                setModel(false);
+                setIsOpen(false);
                 handleSubmit();
               }}
             >

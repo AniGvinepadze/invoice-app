@@ -36,6 +36,7 @@ const PotsContent: React.FC<IProps> = ({ pot, handleSetPots, index }) => {
   useEffect(() => {
     const total = pot.total;
     setNewTotal(total);
+    console.log(newTotal);
   });
 
   const percenteg = Number(
