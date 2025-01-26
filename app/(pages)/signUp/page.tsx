@@ -1,9 +1,9 @@
-import SignUp from "@/app/components/organsms/SignUp/SignUp";
+import SignUp from '@/app/components/organsms/SignUp/SignUp';
 
 const SignUpPage = () => {
   return (
     <>
-      <div>
+      <div className='w-full '>
         <SignUp />
       </div>
     </>
