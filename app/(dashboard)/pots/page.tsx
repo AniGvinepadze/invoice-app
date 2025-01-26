@@ -11,7 +11,7 @@ function Pots() {
   return (
     <div className='px-10  pt-8 pb-[48px] w-full h-screen'>
       <div className='flex justify-between items-center'>
-        <h1>Pots</h1>
+        <h1 className='font-bold text-3xl'>Pots</h1>
         <BudgetModal handleSetPots={setPots} />
       </div>
       <div className='grid mt-8 grid-cols-1 xl:grid-cols-2 gap-6 justify-between'>
