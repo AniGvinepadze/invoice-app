@@ -5,9 +5,9 @@ import { recBills } from "@/app/map";
 export default function HomePageRecurringBills() {
   const borderColors = ["#277C78", "#F2CDAC", "#82C9D7"];
   return (
-    <div className="max-w-[900px] w-full bg-white rounded-xl p-7">
+    <div className="max-w-[1000px] w-full bg-white rounded-xl p-7 ">
       <div className="flex justify-between">
-        <h2 className="font-bold text-xl ">Recurring Bills</h2>
+        <h2 className="font-bold text-xl max-450:text-base">Recurring Bills</h2>
         <div>
           <Link href="/reccuringBills ">
             <p className="font-normal text-sm text-[#696868] hover:text-[#a3a2a2] transition ease-in-out duration-200">

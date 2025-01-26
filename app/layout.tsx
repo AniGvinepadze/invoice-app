@@ -6,6 +6,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SideBar from "./components/organsms/SideBar/SideBar";
 import { usePathname } from "next/navigation";
+import MobileSideBar from "./components/organsms/SideBar/MobileSideBar";
 
 
 const geistSans = Geist({
@@ -37,7 +38,11 @@ export default function RootLayout({
       >
         <div className="flex justify-between gap-5 max-w-[1440px] w-full">
           {!excludeSideBar.includes(pathName) && <SideBar />}
+
           {children}
+       
+          {!excludeSideBar.includes(pathName) && <MobileSideBar />}
+    
         </div>
 
       </body>

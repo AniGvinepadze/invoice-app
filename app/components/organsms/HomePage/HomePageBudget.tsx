@@ -5,7 +5,7 @@ import BudgetSection from "../../moleculs/BudgetSection/BudgetSection";
 
 export default function HomePageBudget() {
   return (
-    <div className="max-w-[900px] w-full bg-white rounded-xl mb-10 p-7">
+    <div className="max-w-[1000px] w-full bg-white rounded-xl mb-10 p-7">
       <div className="flex justify-between">
         <h2 className="font-bold text-xl ">Budget</h2>
         <div>

@@ -4,7 +4,7 @@ import { transaction } from "@/app/map";
 
 export default function HomePageTransactions() {
   return (
-    <div className="max-w-[700px] w-full bg-white p-8 rounded-xl my-10">
+    <div className="max-w-[1000px] w-full bg-white p-8 rounded-xl my-10">
       <div className="flex justify-between">
         <h2 className="font-bold text-xl ">Transacitions</h2>
         <div>

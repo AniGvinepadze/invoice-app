@@ -68,7 +68,7 @@ export default function RecurringBills() {
   }, [searchTerm, sortBy, category, billsList]);
 
   return (
-    <div className='px-4 md:px-[40px] max-w-[1060px] w-full mx-auto'>
+    <div className='px-4 md:px-[40px] max-w-[1060px] w-full mx-auto h-screen'>
       <h2 className='font-bold text-[32px] p-4'>Recurring Bills</h2>
       <div className='flex flex-col md:flex-row justify-between p-4 gap-8'>
         <div className='flex flex-col sm:flex-row md:flex-col justify-between  md:max-w-[340px] w-full max-h-[400px]  gap-4 md:gap-0  '>

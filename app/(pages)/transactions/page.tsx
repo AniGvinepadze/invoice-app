@@ -102,7 +102,7 @@ export default function Transition() {
   };
 
   return (
-    <div className='flex flex-col items-center mx-auto '>
+    <div className='flex flex-col items-center mx-auto h-screen'>
       <h2 className='font-bold text-[32px] p-4 w-full'>Transactions</h2>
       <div className='bg-white max-w-[1060px] w-full rounded-md shadow-md max-h-[960px] h-full overflow-y-auto p-4'>
         <div className='flex items-center justify-between w-full mb-4 p-4  rounded-md shadow-md'>
