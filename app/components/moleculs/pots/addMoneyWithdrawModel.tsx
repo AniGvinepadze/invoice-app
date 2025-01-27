@@ -58,15 +58,17 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
     }
 
     if (title.startsWith('Withdraw')) {
-      if (inputAmount > pot.total) {
+      if (inputAmount < pot.total) {
         alert('Withdrawal amount exceeds total saved');
         setInputAmount(null);
         return;
       }
       const updatedTotal = pot.total - inputAmount;
+      console.log(updatedTotal, 'totalWithdrawal');
       handleNewTotal(updatedTotal);
     } else {
       const updatedTotal = pot.total + inputAmount;
+      console.log(updatedTotal, 'total');
       handleNewTotal(updatedTotal);
     }
 
@@ -120,7 +122,7 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
                   Total Saved
                 </span>
                 <span className='font-bold text-3xl text-[#201f24]'>
-                  $ {pot.total}
+                  $ {newTotal}
                 </span>
               </div>
               <div className='mt-4'>

@@ -29,15 +29,9 @@ interface IProps {
 }
 
 const PotsContent: React.FC<IProps> = ({ pot, handleSetPots, index }) => {
-  const [newTotal, setNewTotal] = useState<number | undefined>();
+  const [newTotal, setNewTotal] = useState<number | undefined>(pot.total);
   const [val, setValue] = useState<string | undefined>();
   const [deleteItem, setDelete] = useState(false);
-  console.log(val);
-  useEffect(() => {
-    const total = pot.total;
-    setNewTotal(total);
-    console.log(newTotal);
-  });
 
   const percenteg = Number(
     (100 * (newTotal ? newTotal : pot.total)) / pot.target
@@ -51,9 +45,7 @@ const PotsContent: React.FC<IProps> = ({ pot, handleSetPots, index }) => {
   };
 
   useEffect(() => {
-    console.log(percenteg);
     if (deleteItem) {
-      console.log(val, 'val2');
       if (val?.startsWith('Delete')) {
         handleSetPots((prev) => {
           setValue('');
@@ -84,7 +76,7 @@ const PotsContent: React.FC<IProps> = ({ pot, handleSetPots, index }) => {
               Total Saved
             </span>
             <span className='font-bold text-3xl text-[#201f24]'>
-              $ {pot.total}
+              $ {newTotal}
             </span>
           </div>
           <div className='mt-4'>
