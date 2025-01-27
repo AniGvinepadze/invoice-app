@@ -18,7 +18,7 @@ export default function LoginFormFields() {
 
   const onSubmit = (data: FormData) => {
     console.log(data);
-    router.push("/");
+    router.push("/home");
   };
 
   return (
