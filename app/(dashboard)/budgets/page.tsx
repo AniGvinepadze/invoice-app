@@ -1,3 +1,4 @@
+
 import React from 'react';
 import BudgetSection from '@/app/components/moleculs/BudgetSection/BudgetSection';
 
