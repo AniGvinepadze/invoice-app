@@ -1,169 +1,281 @@
-"use client";
-import PieChartComponent from "@/app/components/moleculs/BudgetSection/BudgetSection";
-import { budget } from "@/app/map";
-import { useState } from "react";
-import Image from "next/image";
-import { title } from "process";
 
-interface Budget {
-  id: number;
-  title: string;
-  maxAmount: number;
-  spent: number;
-}
+import React from 'react';
+import BudgetSection from '@/app/components/moleculs/BudgetSection/BudgetSection';
 
-export default function BudgetPage() {
-  const [isCategory, setIsCategory] = useState(false);
-  const [isTheme, setIsTheme] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const [budgets, setBudgets] = useState<Budget[]>([
-    {
-      id: 1,
-      title: "Entertainment",
-      maxAmount: 50.0,
-      spent: 15.0,
-    },
-    {
-      id: 2,
-      title: "Bills",
-      maxAmount: 750,
-      spent: 150,
-    },
-  ]);
-
-  const handleAddBudget = () => {
-    const newBudget = {
-      id: budget.length + 1,
-      title: `New Budget ${budgets.length + 1}`,
-      maxAmount: 100,
-      spent: 0,
-    };
-    setBudgets((prev) => [...prev, newBudget]);
-  };
+import { budget } from '@/app/map';
+import imageProf from '@/public/assets/avatars/james-thompson.jpg';
+import data from '@/data.json';
+import Image from 'next/image';
+import BudgetModal from '@/app/components/organsms/BudgetModal/BudgetModal';
+import { Progress } from '@/components/ui/progress';
+function budgets() {
+  const budgets = data.budgets;
 
   return (
-    <div className="max-w-[1110px] w-full p-7 absolute">
-      <div className="flex justify-between">
-        <h2 className="font-bold text-[32px]">Budgets</h2>
-        <button
-          className="rounded-md bg-[#201F24] p-4 text-white font-bold text-sm max-w-[170px] w-full hover:bg-[#3c3b3c] transition-colors ease-in-out duration-300"
-          onClick={() => setShowPopup(true)}
-        >
-          + Add New Budget
-        </button>
+    <main className='px-10  pt-8 pb-[48px] w-full h-screen'>
+      <div className='flex justify-between items-center'>
+        <h1 className='font-bold text-3xl'>Pots</h1>
+        <BudgetModal />
       </div>
-
-      {showPopup && (
-        <div className="max-w-[560px] max-h-[490px] fixed inset-0 z-50 top-32 left-auto right-80 shadow-lg  bg-white p-7 rounded-xl">
-          <div className="flex justify-between">
-            <p className="font-bold text-[32px] ">Add New Budget</p>{" "}
-            <button onClick={() => setShowPopup(false)}>close</button>
+      <div className='flex flex-col   sm:flex-col lg:flex-row gap-6 h-full'>
+        <div className='flex   bg-white lg:self-start self-center  rounded-xl px-[20px] py-4 lg:p-8 flex-col  sm:flex-row lg:flex-col justify-between mt-10'>
+          <div className=' w-full mr-4'>
+            <BudgetSection />
           </div>
-
-          <div>
-            <p className="text-[#696868] font-normal text-sm my-4">
-              Choose a category to set a spending budget. These categories can
-              help you monitor spending.
-            </p>
+          <div className='flex flex-col justify-center'>
+            {budgets.map((el, i) => {
+              return (
+                <div key={i} className='flex gap-7 my-2 '>
+                  <div
+                    className={`w-1 h-full`}
+                    style={{ background: el.theme }}
+                  ></div>
+                  <div>
+                    <p className='font-normal text-xs text-[#696868]'>
+                      {el.category}
+                    </p>
+                    <p className='font-bold text-sm'>{el.maximum}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          <div className="flex flex-col">
-            <label className="my-4 font-bold text-sm text-[#98908B]">
-              Budget Category
-            </label>
-            <input
-              className="relative rounded-md border p-4 w-full border-[#98908B]"
-              value="Entertainment"
-              onClick={() => setIsCategory((prev) => !prev)}
-            />
-            {isCategory && (
-              <div className="w-full max-w-[400px] mt-28 shadow-md p-5 z-10 absolute bg-white rounded-xl">
-                <p className="font-medium text-sm"> Entertainment</p>
-                <div className="w-full bg-[#d5d2d0]  h-[1px] my-3 " />
-                <p className="font-medium text-sm"> Bills</p>
-                <div className="w-full bg-[#d5d2d0]  h-[1px] my-3 " />
-                <p className="font-medium text-sm"> Groceries</p>
-                <div className="w-full bg-[#d5d2d0]  h-[1px] my-3 " />
-                <p className="font-medium text-sm"> Dining Out</p>
-                <div className="w-full bg-[#d5d2d0] h-[1px] my-3" />
-                <p className="font-medium text-sm"> Transportation</p>
-                <div className="w-full bg-[#d5d2d0]  h-[1px] my-3 " />
-                <p className="font-medium text-sm"> Personal Care</p>
-                <div className="w-full bg-[#d5d2d0] h-[1px] my-3 " />
-                <p className="font-medium text-sm"> Education</p>
+        </div>
+        <div className='flex-1  flex flex-col'>
+          <div className='flex  bg-white rounded-xl px-[20px] py-4 lg:p-8 flex-col   justify-between mt-10'>
+            <div className='flex items-center gap-4'>
+              <div className='w-4 h-4 bg-green-500 rounded-full '></div>
+              <h4 className='font-bold text-xl '>Entertainment</h4>
+            </div>
+            <span className='mt-[20px] font-[14px] leading-5 text-[#696868]'>
+              Maximum of $<span>50.00</span>
+            </span>
+            <div className='mt-4 h-3'>
+              <Progress value={40} className='bg-green-500 h-full' />
+            </div>
+            <div className='flex mt-4'>
+              <div className='flex gap-4 flex-1'>
+                <div className='w-[2px] h-full bg-green-500'></div>
+                <div className='flex flex-col gap-1'>
+                  <span className='font-[12px] leading-4 text-[#696868]'>
+                    {' '}
+                    Spent
+                  </span>
+                  <span className='font-bold text-[14px] leading-[21px] text-[#201f24]'>
+                    $<span>20.00</span>
+                  </span>
+                </div>
               </div>
-            )}
-
-            <label className="my-4 font-bold text-sm text-[#98908B]">
-              {" "}
-              Maximum Spend
-            </label>
-            <input
-              className="relative rounded-md border p-4 w-full border-[#98908B]"
-              value="50.00"
-            />
-
-<div className="relative">
-            <label className="my-4 font-bold text-sm text-[#98908B]">
-              Theme
-            </label>
-            <input
-              className="relative rounded-md border p-4 w-full border-[#98908B]"
-              value="green"
-              onClick={() => setIsTheme((prev) => !prev)}
-            />
-            {isTheme && (
-              <div className="w-full max-w-[400px]  shadow-md p-5 absolute bg-white rounded-xl">
-                <p className="font-medium text-sm"> Red</p>
-                <div className="w-full bg-[#d5d2d0]  h-[1px] my-3 " />
-                <p className="font-medium text-sm"> Green</p>
-                <div className="w-full bg-[#d5d2d0]  h-[1px] my-3 " />
-                <p className="font-medium text-sm"> Yallow</p>
-                <div className="w-full bg-[#d5d2d0]  h-[1px] my-3 " />
-                <p className="font-medium text-sm"> Navy</p>
-                <div className="w-full bg-[#d5d2d0] h-[1px] my-3" />
-                <p className="font-medium text-sm"> Cyan</p>
-                <div className="w-full bg-[#d5d2d0]  h-[1px] my-3 " />
-                <p className="font-medium text-sm"> Purple</p>
+              <div className='flex gap-4 flex-1'>
+                <div className='w-[2px] h-full bg-[#f8f4f0]'></div>
+                <div className='flex flex-col gap-1'>
+                  <span className='font-[12px] leading-4 text-[#696868]'>
+                    {' '}
+                    Remaining
+                  </span>
+                  <span className='font-bold text-[14px] leading-[21px] text-[#201f24]'>
+                    $<span>35.00</span>
+                  </span>
+                </div>
               </div>
-              
-            )}
+            </div>
+            <div className='mt-[20px] bg-[#f8f4f0] rounded-[12px] p-[20px]'>
+              <div className='flex justify-between mb-6'>
+                <p className='font-bold text-base text-[#201f24]'>
+                  Latest Spending
+                </p>
+                <div className='text-[#696868] text-base'>See All</div>
+              </div>
+              <div className='border-opacity-15 py-3 border-b border-b-[#696868]'>
+                <div className='flex justify-between '>
+                  <div className='flex gap-4 items-center justify-center'>
+                    <div className='w-4 h-4 rounded-full overflow-hidden'>
+                      <Image
+                        src={imageProf}
+                        alt='profile'
+                        className='w-full h-full'
+                      />
+                    </div>
+                    <p className='font-bold text-sm '>James Thompson</p>
+                  </div>
+                  <div className='flex flex-col '>
+                    <p className='text-[#201f24] self-end font-bold text-sm '>
+                      -$5.00
+                    </p>
+                    <p className='font-normal text-sm text-[#696868]'>
+                      11 Aug 2024
+                    </p>
+                  </div>
+                </div>
+                <div className='w-full bg-[#F2F2F2] h-[1px] ' />
+              </div>
+              <div className='py-3 border-opacity-15 border-b border-b-[#696868]'>
+                <div className='flex justify-between '>
+                  <div className='flex gap-4 items-center justify-center'>
+                    <div className='w-4 h-4 rounded-full overflow-hidden'>
+                      <Image
+                        src={imageProf}
+                        alt='profile'
+                        className='w-full h-full'
+                      />
+                    </div>
+                    <p className='font-bold text-sm '>James Thompson</p>
+                  </div>
+                  <div className='flex flex-col '>
+                    <p className='text-[#201f24] self-end font-bold text-sm '>
+                      -$5.00
+                    </p>
+                    <p className='font-normal text-sm text-[#696868]'>
+                      11 Aug 2024
+                    </p>
+                  </div>
+                </div>
+                <div className='w-full bg-[#F2F2F2] h-[1px] ' />
+              </div>
+              <div className='py-3 '>
+                <div className='flex justify-between '>
+                  <div className='flex gap-4 items-center justify-center'>
+                    <div className='w-4 h-4 rounded-full overflow-hidden'>
+                      <Image
+                        src={imageProf}
+                        alt='profile'
+                        className='w-full h-full'
+                      />
+                    </div>
+                    <p className='font-bold text-sm '>James Thompson</p>
+                  </div>
+                  <div className='flex flex-col '>
+                    <p className='text-[#201f24] self-end font-bold text-sm '>
+                      -$5.00
+                    </p>
+                    <p className='font-normal text-sm text-[#696868]'>
+                      11 Aug 2024
+                    </p>
+                  </div>
+                </div>
+                <div className='w-full bg-[#F2F2F2] h-[1px] ' />
+              </div>
+            </div>
+          </div>
+          <div className='flex  bg-white rounded-xl px-[20px] py-4 lg:p-8 flex-col   justify-between mt-10'>
+            <div className='flex items-center gap-4'>
+              <div className='w-4 h-4 bg-green-500 rounded-full '></div>
+              <h4 className='font-bold text-xl '>Entertainment</h4>
+            </div>
+            <span className='mt-[20px] font-[14px] leading-5 text-[#696868]'>
+              Maximum of $<span>50.00</span>
+            </span>
+            <div className='mt-4 h-3'>
+              <Progress value={40} className='bg-green-500 h-full' />
+            </div>
+            <div className='flex mt-4'>
+              <div className='flex gap-4 flex-1'>
+                <div className='w-[2px] h-full bg-green-500'></div>
+                <div className='flex flex-col gap-1'>
+                  <span className='font-[12px] leading-4 text-[#696868]'>
+                    {' '}
+                    Spent
+                  </span>
+                  <span className='font-bold text-[14px] leading-[21px] text-[#201f24]'>
+                    $<span>20.00</span>
+                  </span>
+                </div>
+              </div>
+              <div className='flex gap-4 flex-1'>
+                <div className='w-[2px] h-full bg-[#f8f4f0]'></div>
+                <div className='flex flex-col gap-1'>
+                  <span className='font-[12px] leading-4 text-[#696868]'>
+                    {' '}
+                    Remaining
+                  </span>
+                  <span className='font-bold text-[14px] leading-[21px] text-[#201f24]'>
+                    $<span>35.00</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className='mt-[20px] bg-[#f8f4f0] rounded-[12px] p-[20px]'>
+              <div className='flex justify-between mb-6'>
+                <p className='font-bold text-base text-[#201f24]'>
+                  Latest Spending
+                </p>
+                <div className='text-[#696868] text-base'>See All</div>
+              </div>
+              <div className='border-opacity-15 py-3 border-b border-b-[#696868]'>
+                <div className='flex justify-between '>
+                  <div className='flex gap-4 items-center justify-center'>
+                    <div className='w-4 h-4 rounded-full overflow-hidden'>
+                      <Image
+                        src={imageProf}
+                        alt='profile'
+                        className='w-full h-full'
+                      />
+                    </div>
+                    <p className='font-bold text-sm '>James Thompson</p>
+                  </div>
+                  <div className='flex flex-col '>
+                    <p className='text-[#201f24] self-end font-bold text-sm '>
+                      -$5.00
+                    </p>
+                    <p className='font-normal text-sm text-[#696868]'>
+                      11 Aug 2024
+                    </p>
+                  </div>
+                </div>
+                <div className='w-full bg-[#F2F2F2] h-[1px] ' />
+              </div>
+              <div className='py-3 border-opacity-15 border-b border-b-[#696868]'>
+                <div className='flex justify-between '>
+                  <div className='flex gap-4 items-center justify-center'>
+                    <div className='w-4 h-4 rounded-full overflow-hidden'>
+                      <Image
+                        src={imageProf}
+                        alt='profile'
+                        className='w-full h-full'
+                      />
+                    </div>
+                    <p className='font-bold text-sm '>James Thompson</p>
+                  </div>
+                  <div className='flex flex-col '>
+                    <p className='text-[#201f24] self-end font-bold text-sm '>
+                      -$5.00
+                    </p>
+                    <p className='font-normal text-sm text-[#696868]'>
+                      11 Aug 2024
+                    </p>
+                  </div>
+                </div>
+                <div className='w-full bg-[#F2F2F2] h-[1px] ' />
+              </div>
+              <div className='py-3 '>
+                <div className='flex justify-between '>
+                  <div className='flex gap-4 items-center justify-center'>
+                    <div className='w-4 h-4 rounded-full overflow-hidden'>
+                      <Image
+                        src={imageProf}
+                        alt='profile'
+                        className='w-full h-full'
+                      />
+                    </div>
+                    <p className='font-bold text-sm '>James Thompson</p>
+                  </div>
+                  <div className='flex flex-col '>
+                    <p className='text-[#201f24] self-end font-bold text-sm '>
+                      -$5.00
+                    </p>
+                    <p className='font-normal text-sm text-[#696868]'>
+                      11 Aug 2024
+                    </p>
+                  </div>
+                </div>
+                <div className='w-full bg-[#F2F2F2] h-[1px] ' />
+              </div>
             </div>
           </div>
         </div>
-      )}
-
-      <div className=" max-w-[428px] w-full bg-white rounded-xl p-5 ">
-        <div className="flex justify-center items-center">
-          <PieChartComponent />
-        </div>
-        <div>
-          <p className="font-bold text-xl my-4">Spending Summary</p>
-        </div>
-        <div className="flex  ">
-          <div>
-            {budget.map((el) => (
-              <div key={el.id}>
-                <div className="flex gap-7 my-2 ">
-                  <div className="">
-                    <Image src={el.img} alt={el.title} width={3} height={0} />
-                  </div>
-                  <div className="flex justify-between">
-                    <div>
-                      <p className="font-normal text-xs text-[#696868] mt-1">
-                        {el.title}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-bold text-sm mt-[1px] ">{el.budget}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="w-full bg-[#F2F2F2] h-[1px] my-3" />
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
-    </div>
+    </main>
   );
 }
+
+export default budgets;

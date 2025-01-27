@@ -11,16 +11,18 @@ import { useForm, Controller } from 'react-hook-form';
 import dataPots from '@/data.json';
 
 interface IBudget {
-  handleSetPots: React.Dispatch<
-    React.SetStateAction<
-      {
-        name: string;
-        target: number;
-        total: number;
-        theme: string;
-      }[]
-    >
-  >;
+  handleSetPots?:
+    | React.Dispatch<
+        React.SetStateAction<
+          {
+            name: string;
+            target: number;
+            total: number;
+            theme: string;
+          }[]
+        >
+      >
+    | undefined;
 }
 const BudgetModal: React.FC<IBudget> = ({ handleSetPots }) => {
   const [model, setModel] = useState(false);
@@ -43,7 +45,9 @@ const BudgetModal: React.FC<IBudget> = ({ handleSetPots }) => {
       total: 0,
     };
 
-    handleSetPots((prev) => [...prev, newPot]);
+    if (handleSetPots) {
+      handleSetPots((prev) => [...prev, newPot]);
+    }
     reset();
     setModel(false);
   };
