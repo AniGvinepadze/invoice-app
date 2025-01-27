@@ -9,7 +9,7 @@ export default function HomePageRecurringBills() {
       <div className="flex justify-between">
         <h2 className="font-bold text-xl max-450:text-base">Recurring Bills</h2>
         <div>
-          <Link href="/reccuringBills ">
+          <Link href="/recurringbills ">
             <p className="font-normal text-sm text-[#696868] hover:text-[#a3a2a2] transition ease-in-out duration-200">
               See Details
             </p>
