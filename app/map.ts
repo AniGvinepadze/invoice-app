@@ -184,3 +184,5 @@ export const budget: PotsType[] = [
     img: colorTag4,
   },
 ];
+
+
