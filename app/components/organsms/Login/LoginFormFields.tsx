@@ -2,6 +2,8 @@
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import axios from "axios"
 export type FormData = {
   email: string;
   password: string;
@@ -9,6 +11,7 @@ export type FormData = {
 };
 
 export default function LoginFormFields() {
+  const [error,setError] = useState("")
   const router = useRouter();
   const {
     register,
@@ -16,9 +19,17 @@ export default function LoginFormFields() {
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    router.push("/home");
+  const onSubmit = async(data: FormData) => {
+       try {
+        setError("")
+        const res = await axios.post("http://localhost:3000/auth/sign-up",data)
+        console.log(res,"Res")
+        if(res.status === 201){
+          router.push("/")
+        }
+       } catch (e) {
+        setError("Something went wrong")
+       }
   };
 
   return (
