@@ -1,5 +1,4 @@
 'use client';
-import React, { useState } from 'react';
 import {
   Select,
   SelectContent,
@@ -7,21 +6,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useForm, Controller } from 'react-hook-form';
-import dataPots from '@/data.json';
-import axios from 'axios';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
-import { IPots } from '@/app/(dashboard)/pots/page';
+import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { IViewerPot } from './potsContent';
+import axios from 'axios';
 
-interface IBudget {
-  handleNewPot: React.Dispatch<React.SetStateAction<IPots | undefined>>;
+interface IDeleteModal {
+  handleDelete: React.Dispatch<React.SetStateAction<boolean>>;
+  handleValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+  handleViewerPot: React.Dispatch<React.SetStateAction<IViewerPot | null>>;
+  viewerPot: IViewerPot;
 }
-const BudgetModal: React.FC<IBudget> = ({ handleNewPot }) => {
-  const [model, setModel] = useState(false);
-  const { register, handleSubmit, control, reset } = useForm();
-  const [selectVal, setSelectVal] = useState('');
+
+const EditModal: React.FC<IDeleteModal> = ({
+  handleDelete,
+  handleValue,
+  handleViewerPot,
+  viewerPot,
+}) => {
   const router = useRouter();
+  const [model, setModel] = useState(false);
+  const { register, handleSubmit, control, reset } = useForm({
+    defaultValues: {
+      potName: viewerPot.potName,
+      theme: viewerPot.theme,
+      target: viewerPot.target,
+    },
+  });
+  const [selectVal, setSelectVal] = useState(viewerPot.theme);
 
   const colorMap: Record<string, string> = {
     '#277C78': 'bg-green-700',
@@ -38,52 +52,70 @@ const BudgetModal: React.FC<IBudget> = ({ handleNewPot }) => {
       potName: string;
       target: number;
       theme: string;
-      total: number;
     } = {
       potName: data.potName,
       target: +data.target,
-      theme: data.selectVal,
-      total: 0,
+      theme: selectVal,
     };
 
-    handleNewPot(newPot);
+    handleViewerPot((prev) =>
+      prev
+        ? {
+            ...prev,
+            potName: data.potName,
+            target: +data.target,
+            theme: selectVal,
+          }
+        : null
+    );
+    const updatePot = async () => {
+      try {
+        await axios.patch(
+          `http://localhost:3001/pots/${viewerPot._id}`,
+          newPot,
+          {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    updatePot();
 
-    // if (handleSetPots) {
-    //   handleSetPots((prev) => [...prev, newPot]);
-    // }
-    reset();
-
+    // reset();
+    handleDelete(false);
+    handleValue('');
     setModel(false);
   };
-
   return (
     <>
-      <button
-        className='bg-[#201F24] text-normal font-bold text-white flex justify-center p-[16px] rounded-lg cursor-pointer hover:bg-[#696868] transition-colors ease-in-out duration-300 leading-[27px] z-40'
-        type='button'
-        onClick={() => setModel(true)}
+      <div
+        className={
+          'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300'
+        }
       >
-        + Add New Pot
-      </button>
-      {model && (
         <div
-          className={`fixed inset-0 z-20 flex overflow-y-hidden items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 z-20${
-            model ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
-          onClick={() => setModel(false)}
+          className={
+            'bg-white max-w-[560px] w-full p-8 rounded-lg shadow-lg transition-transform duration-300 transform'
+          }
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
-          <div
-            className={`bg-white z-50  p-8 rounded-lg shadow-lg transition-transform duration-300 transform ${
-              model ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-            }`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h4>Add New Pot</h4>
-
-            <p>
-              Create a pot to set savings targets. These can help keep you on
-              track as you save for special purchases.
-            </p>
+          <div className='flex justify-between cursor-pointer'>
+            <span className='cursor-pointer ' onClick={() => handleValue('')}>
+              X
+            </span>
+          </div>
+          <p>
+            Add money to your pot to keep it separate from your main balance. As
+            soon as you add this money, it will be deducted from your current
+            balance.
+          </p>
+          <div>
             <form onSubmit={handleSubmit(onsubmit)}>
               <span>Pot Name</span>
               <label className='border rounded-[8px]  focus:border-0 flex py-3  px-[20px] border-[#98908b] justify-center gap-4'>
@@ -111,16 +143,15 @@ const BudgetModal: React.FC<IBudget> = ({ handleNewPot }) => {
               <div className='flex flex-col space-y-1.5'>
                 <label htmlFor='theme-select'>Theme</label>
                 <Controller
-                  name='selectVal'
+                  name='theme'
                   control={control}
-                  defaultValue={null} // Ensure default value
                   render={({ field }) => (
                     <Select
                       {...field}
                       value={selectVal}
                       onValueChange={(e) => {
                         setSelectVal(e);
-                        field.onChange(e); // Sync with react-hook-form
+                        field.onChange(e);
                       }}
                     >
                       <SelectTrigger
@@ -170,14 +201,14 @@ const BudgetModal: React.FC<IBudget> = ({ handleNewPot }) => {
                 className='mt-4 bg-red-500 text-white p-2 rounded'
                 // onClick={() => setModel(false)}
               >
-                Closesaw
+                Confirm
               </button>
             </form>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 };
 
-export default BudgetModal;
+export default EditModal;

@@ -13,19 +13,9 @@ import iconElipsed from '@/public/assets/icon-ellipsis.svg';
 
 interface IDelete {
   handleValue: React.Dispatch<React.SetStateAction<string | undefined>>;
-  handleSetPots: React.Dispatch<
-    React.SetStateAction<
-      {
-        name: string;
-        target: number;
-        total: number;
-        theme: string;
-      }[]
-    >
-  >;
 }
 
-const DeleteEditModal: React.FC<IDelete> = ({ handleValue, handleSetPots }) => {
+const DeleteEditModal: React.FC<IDelete> = ({ handleValue }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -34,7 +24,7 @@ const DeleteEditModal: React.FC<IDelete> = ({ handleValue, handleSetPots }) => {
         <button
           onClick={() => setOpen((pv) => !pv)}
           title='menu'
-          className='flex items-center gap-2 px-3 py-2 rounded-md text-indigo-50   transition-colors'
+          className='flex items-center cursor-pointer gap-2 px-3 py-2 rounded-md text-indigo-50   transition-colors'
         >
           <motion.span variants={iconVariants}>
             <Image src={iconElipsed} alt='setting' />

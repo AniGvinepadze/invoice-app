@@ -1,16 +1,5 @@
 'use client';
 import React from 'react';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
 
 interface IDeleteModal {
   handleDelete: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,10 +18,14 @@ const DeleteModal: React.FC<IDeleteModal> = ({ handleDelete, handleValue }) => {
           className={
             'bg-white max-w-[560px] w-full p-8 rounded-lg shadow-lg transition-transform duration-300 transform'
           }
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
-          <div className='flex justify-between'>
-            <span>X</span>
+          <div className='flex justify-between cursor-pointer'>
+            <span className='cursor-pointer ' onClick={() => handleValue('')}>
+              X
+            </span>
           </div>
           <p>
             Add money to your pot to keep it separate from your main balance. As
@@ -45,6 +38,7 @@ const DeleteModal: React.FC<IDeleteModal> = ({ handleDelete, handleValue }) => {
             className='mt-4 bg-[#201f24] w-full text-white p-2 rounded'
             onClick={() => {
               handleDelete(true);
+              handleValue('');
             }}
           >
             Confirm
