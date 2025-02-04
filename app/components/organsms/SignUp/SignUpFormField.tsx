@@ -2,16 +2,35 @@
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { FormData } from '../Login/LoginFormFields';
+import axios from 'axios';
+
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function SignUpFormFields() {
+  const [err, setError] = useState<null | string>();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
+  const onSubmit = async (formData: FormData) => {
+    setError(null);
+    try {
+      const res = await axios.post(
+        'http://localhost:3001/auth/sign-up',
+        formData
+      );
+      setError(null);
+
+      if (res.status === 201) {
+        router.push('/login');
+      }
+    } catch (err: any) {
+      setError(err.response.data.message);
+    }
   };
 
   return (
@@ -31,7 +50,7 @@ export default function SignUpFormFields() {
           <input
             type='text'
             className='w-full h-[45px] rounded-lg border border-[#696868] p-2'
-            {...register('name', {
+            {...register('fullName', {
               required: {
                 value: true,
                 message: 'Password is required',
@@ -105,16 +124,27 @@ export default function SignUpFormFields() {
               </span>
             )}
           </p>
+
+          <p>
+            {err && (
+              <span
+                className='text-red-500
+                  text-xs italic'
+              >
+                {err}
+              </span>
+            )}
+          </p>
         </div>
         <div>
-          <Link href='/login'>
-            <button
-              className='w-full bg-[#201F24]  text-normal font-semibold my-8 text-white flex justify-center p-[13px] rounded-lg cursor-pointer hover:bg-[#696868] transition-colors ease-in-out duration-300'
-              type='submit'
-            >
-              Create Account
-            </button>
-          </Link>
+          {/* <Link href='/login'> */}
+          <button
+            className='w-full bg-[#201F24]  text-normal font-semibold my-8 text-white flex justify-center p-[13px] rounded-lg cursor-pointer hover:bg-[#696868] transition-colors ease-in-out duration-300'
+            type='submit'
+          >
+            Create Account
+          </button>
+          {/* </Link> */}
         </div>
         <div className='flex justify-center '>
           <p className='font-medium text-normal'>
