@@ -1,13 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-// import Pagination from "@/components/__molecules/Pagination";
-import Image from "next/image";
-// import { Category, CloseBtn, Sort } from "@/utility/images/ImgExport";
 import axios from "axios";
-// import Spinner from "../__molecules/Spinner";
-import { motion } from "framer-motion";
 import Pagination from "@/app/components/moleculs/Transaction/Paginations";
-
 type SortType = "A" | "Z" | "High" | "Low" | "Latest";
 
 interface Transaction {
@@ -54,7 +48,7 @@ export default function TransactionsPage() {
     try {
       const response = await axios.post(
         "http://localhost:3001/transactions",
-        
+
         newTransaction
       );
       setIsModalOpen(false);
