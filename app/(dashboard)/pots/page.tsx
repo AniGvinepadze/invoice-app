@@ -63,11 +63,12 @@ function Pots() {
         const res = await axios.post(`${API_BASE_URL}/pots`, newPot, {
           headers: { authorization: `Bearer ${token}` },
         });
+
         setPots((prev) => [newPot, ...prev]);
-        console.log(newPot, 'news');
+        
         setNewPot(undefined);
-        console.log(newPot, 'news1');
-        console.log(pots, 'pots');
+     
+
       } catch (e) {
         console.error('Error adding pot:', e);
       }
@@ -75,7 +76,7 @@ function Pots() {
 
     createPot();
   }, [newPot]);
-  console.log(pots, 'pots');
+  
 
   useEffect(() => {
     const potsFetch = async () => {
