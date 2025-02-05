@@ -79,7 +79,7 @@ function Pots() {
           },
         });
 
-        setPots((prev) => [res.data, ...prev]);
+        setPots((prev:any) => [res.data, ...prev]);
       } catch (e) {
         console.error('Error adding pot:', e);
       }
