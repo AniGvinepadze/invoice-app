@@ -7,59 +7,87 @@ import { getCookie } from 'cookies-next';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
-interface IPots {
-  title: string;
-  content: string;
+export interface IPots {
+  potName: string;
+  target: number;
+  theme: string;
+  total: number;
+  _id: string;
 }
 
-const fetchPots = async (token: string): Promise<IPots[]> => {
+const fetchPots = async (token: string): Promise<IPots[] | undefined> => {
   let url = `http://localhost:3001/pots`;
-
-  const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  if (!res.ok) throw new Error('Failed to fetch data, response is not OK');
-
-  const data = await res.json();
-
-  return data;
+  try {
+    const res = await axios.get(url, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (e) {
+    console.log(e);
+  }
 };
 function Pots() {
   const router = useRouter();
-  const [pots, setPots] = useState(data.pots || []);
+  const [pots, setPots] = useState<IPots[] | undefined>();
+
+  const [newPot, setNewPot] = useState<IPots | undefined>();
 
   const [user, setUser] = useState();
 
-  const getCurrentUser = async (token: string) => {
-    try {
-      const response = await axios.get(
-        'http://localhost:3001/auth/current-user',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setUser(response.data);
-    } catch (err) {
-      router.push('/login');
-    }
-  };
-
-  const token = getCookie('accessToken');
+  const token = getCookie('accessToken') as string;
   useEffect(() => {
-    getCurrentUser(token as string);
-  }, []);
+    const getCurrentUser = async () => {
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          'http://localhost:3001/auth/current-user',
+          {
+            headers: { authorization: `Bearer ${token}` },
+          }
+        );
+        setUser(response.data);
+      } catch (err) {
+        router.push('/login');
+      }
+    };
+
+    getCurrentUser();
+  }, [token]);
 
   useEffect(() => {
     const potsFetch = async () => {
-      const res = await fetchPots(token as string);
-      console.log(res, 'pots');
+      const res = await fetchPots(token);
+      setPots(res?.reverse());
     };
     potsFetch();
-  }, [pots]);
+  }, [token]);
+
+  useEffect(() => {
+    if (!newPot) return;
+
+    const create = async () => {
+      try {
+        const res = await axios.post('http://localhost:3001/pots', newPot, {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
+
+        setPots((prev) => [res.data, ...prev]);
+      } catch (e) {
+        console.error('Error adding pot:', e);
+      }
+    };
+
+    create();
+    router.refresh();
+  }, [newPot]);
 
   if (!user) return null;
 
@@ -67,14 +95,15 @@ function Pots() {
     <div className='px-10  pt-8 pb-[48px] w-full overflow-x-hidden overflow-scroll h-screen'>
       <div className='flex justify-between items-center'>
         <h1 className='font-bold text-3xl'>Pots</h1>
-        <BudgetModal handleSetPots={setPots} />
+        <BudgetModal handleNewPot={setNewPot} />
       </div>
       <div className='grid mt-8  grid-cols-1 xl:grid-cols-2 gap-6 justify-between'>
-        {pots.map((p, i) => {
-          return (
-            <PotsContent key={i} index={i} pot={p} handleSetPots={setPots} />
-          );
-        })}
+        {pots &&
+          pots.map((p, i) => {
+            return (
+              <PotsContent key={i} index={i} pot={p} handleSetPots={setPots} />
+            );
+          })}
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import data from '@/data.json';
 import { cn } from '@/lib/utils';
 
 interface IPot {
-  name: string;
+  potName: string;
   target: number;
   total: number;
   theme: string;
@@ -31,8 +31,8 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
     (100 * (newTotal ? newTotal : pot.total)) / pot.target
   ).toFixed(2);
   const newAmount: number = title.startsWith('Withdraw')
-    ? +(newTotal ? newTotal : pot.total) - Number(inputAmount)
-    : +(newTotal ? newTotal : pot.total) + Number(inputAmount);
+    ? +(newTotal ?? pot.total) - (inputAmount ?? 0)
+    : +(newTotal ?? pot.total) + (inputAmount ?? 0);
 
   const [newPercentage, setNewPercentage] = useState<number | null | undefined>(
     null
@@ -58,18 +58,19 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
     }
 
     if (title.startsWith('Withdraw')) {
-      if (inputAmount < pot.total) {
+      if (inputAmount > (newTotal ?? pot.total)) {
         alert('Withdrawal amount exceeds total saved');
         setInputAmount(null);
         return;
       }
-      const updatedTotal = pot.total - inputAmount;
-      console.log(updatedTotal, 'totalWithdrawal');
-      handleNewTotal(updatedTotal);
+      handleNewTotal((prev) => (prev ?? pot.total) - inputAmount);
     } else {
-      const updatedTotal = pot.total + inputAmount;
-      console.log(updatedTotal, 'total');
-      handleNewTotal(updatedTotal);
+      if ((newTotal ?? pot.total) + inputAmount > pot.target) {
+        alert('Cannot exceed the target amount');
+        setInputAmount(null);
+        return;
+      }
+      handleNewTotal((prev) => (prev ?? pot.total) + inputAmount);
     }
 
     setInputAmount(null);
@@ -108,7 +109,7 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
             <div className='flex justify-between'>
-              <h3>Add to '{pot.name}'</h3>
+              <h3>Add to '{pot.potName}'</h3>
               <span>X</span>
             </div>
             <p>
