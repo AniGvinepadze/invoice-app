@@ -1,25 +1,30 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
-
+import { getCookie } from "cookies-next";
+import axios from "axios";
 
 export default function HomePageRecurringBills() {
-
   const router = useRouter();
   const handleClickBills = () => {
     router.push("/recurringbills");
   };
 
-
-
+  const token = getCookie("accessToken");
   const [bills, setBills] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3001/reccuringbills");
-        const data = await response.json();
-        setBills(data);
+        const response = await axios.get(
+          "http://localhost:3001/reccuringbills",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // const data = await response.json();
+        setBills(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -31,18 +36,22 @@ export default function HomePageRecurringBills() {
   let amountSpent = 0;
   let totalUpcoming = 0;
   let dueSoon = 0;
-  bills.forEach((el: any) => {
-    totalBills += el.amount;
-    if (el.status == "paid") {
-      amountSpent += el.amount;
-    }
-    if (el.status == "none") {
-      totalUpcoming += el.amount;
-    }
-    if ((el.status = "unpaid")) {
-      dueSoon += el.amount;
-    }
-  });
+  if (!Array.isArray(bills)) {
+    console.error("bills is not an array", bills);
+  } else {
+    bills.forEach((el: any) => {
+      totalBills += el.amount;
+
+      if (el.status === "paid") {
+        amountSpent += el.amount;
+      } else if (el.status === "none") {
+        totalUpcoming += el.amount;
+      } else if (el.status === "unpaid") {
+        // Fixed comparison
+        dueSoon += el.amount;
+      }
+    });
+  }
 
   return (
     <div className="grow basis-[428px] relative -z-10">
