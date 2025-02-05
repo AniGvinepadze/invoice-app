@@ -45,6 +45,7 @@ const BudgetModal: React.FC<IBudget> = ({ handleNewPot }) => {
       theme: data.selectVal,
       total: 0,
     };
+    console.log(newPot, 'addNew');
 
     handleNewPot(newPot);
 
