@@ -73,9 +73,9 @@ export default function Pagination({
             (a, b) => parseFloat(a.amount) - parseFloat(b.amount)
           );
         } else if (sort === "Latest") {
-          transactions.sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-          );
+        //   transactions.sort(
+        //     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        //   );
         }
 
         setTransactions(transactions);
@@ -148,18 +148,18 @@ export default function Pagination({
                 {transaction.category}
               </h3>
               <h3 className="text-gray-600 sm:hidden md:flex">
-                {transaction.date
+                {/* {transaction.date
                   ? new Date(transaction.date).toISOString().split("T")[0]
-                  : "Invalid Date"}
+                  : "Invalid Date"} */}
               </h3>
               <div>
                 <h3 className="font-semibold text-gray-800">
                   {transaction.amount}$
                 </h3>
                 <h3 className="text-gray-600 md:hidden">
-                  {transaction.date
+                  {/* {transaction.date
                     ? new Date(transaction.date).toISOString().split("T")[0]
-                    : "Invalid Date"}
+                    : "Invalid Date"} */}
                 </h3>
               </div>
             </motion.div>

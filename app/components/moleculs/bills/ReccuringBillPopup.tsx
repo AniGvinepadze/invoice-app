@@ -1,4 +1,9 @@
-import React, { useState } from "react";
+"use client";
+
+import axios from "axios";
+import { getCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const ReccuirngBillPopUp = ({
   setShow,
@@ -7,66 +12,93 @@ const ReccuirngBillPopUp = ({
   setShow: any;
   addBill: any;
 }) => {
-  const handleClickDisappear = () => {
-    setShow(false);
-  };
-
+  const [user, setUser] = useState();
   const [formData, setFormData] = useState({
-    billName: "",
-    frequency: "",
-    dueDate: "",
-    status: "",
-    amount: "",
+    billTitle: "",
+    date: "",
+    bill_amount: "",
   });
 
+  const handleClickDisappear = () => setShow(false);
+
+  const router = typeof window !== "undefined" ? useRouter() : null;
+
   const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({ ...prevState, [name]: value }));
+    const { name, value, type } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+      [name]: type === "number" ? Number(value) || 0 : value,
+    }));
   };
 
-  console.log(formData.status);
+  const token = getCookie("accessToken") as string;
+
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      if (!token || !router) return;
+
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/auth/current-user",
+          {
+            headers: { authorization: `Bearer ${token}` },
+          }
+        );
+        setUser(response.data);
+      } catch (err) {
+        router.push("/login");
+      }
+    };
+
+    getCurrentUser();
+  }, [token, router]);
 
   const sendPostRequest = async () => {
     if (
-      !formData.billName.trim() ||
-      !formData.frequency.trim() ||
-      !formData.dueDate.trim() ||
-      !formData.amount.trim()
+      !formData.billTitle.trim() ||
+      !formData.date.trim() ||
+      !formData.bill_amount.trim()
     ) {
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:3001/reccuringbills", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          amount: Number(formData.amount),
-          dueDate: `${formData.dueDate}`,
-          status: `${formData.status}`,
-        }),
-      });
+      const response = await axios.post(
+        "http://localhost:3001/reccuringbills",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            dueDate: formData.date,
+          }),
+        }
+      );
 
-      if (!response.ok) {
-        throw new Error("Failed to add the bill. Please try again.");
-      }
-
-      const newBill = await response.json();
-      addBill(newBill); // Call addBill to update the bills list
+        // const newBill = await response.json();
+        // addBill(newBill);
       alert("Bill added successfully!");
-      handleClickDisappear(); // Hide the popup after submission
+      handleClickDisappear();
     } catch (error) {
       console.error("Error submitting form:", error);
-    
     }
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    sendPostRequest();
+    try {
+      await axios.post("http://localhost:3001/reccuringbills", formData, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      alert("Bill added successfully!");
+      handleClickDisappear();
+    } catch (e) {
+      console.error("Error adding bill:", e);
+    }
   };
 
   return (
@@ -89,66 +121,20 @@ const ReccuirngBillPopUp = ({
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
             <label
-              htmlFor="billName"
+              htmlFor="billTitle"
               className="block text-sm font-medium text-gray-700"
             >
               Bill Name
             </label>
             <input
-              id="billName"
-              name="billName"
-              value={formData.billName}
+              id="billTitle"
+              name="billTitle"
+              value={formData.billTitle}
               onChange={handleChange}
               type="text"
               placeholder="e.g. Rainy Days"
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
             />
-          </div>
-          <div className="flex gap-[30px]">
-            <div>
-              <label
-                htmlFor="frequency"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Frequency
-              </label>
-              <select
-                className="p-2 border-gray-300 border-[2px] rounded-[8px]"
-                name="frequency"
-                id="frequency"
-                value={formData.frequency}
-                onChange={handleChange}
-              >
-                <option value="" disabled>
-                  Select frequency
-                </option>
-                <option value="monthly">Monthly</option>
-                <option value="weekly">Weekly</option>
-                <option value="daily">Daily</option>
-              </select>
-            </div>
-            <div>
-              <label
-                htmlFor="status"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Status
-              </label>
-              <select
-                className="p-2 border-gray-300 border-[2px] rounded-[8px]"
-                name="status"
-                id="status"
-                value={formData.status}
-                onChange={handleChange}
-              >
-                <option value="" disabled>
-                  Select Status
-                </option>
-                <option value="due">Due</option>
-                <option value="paid">Paid</option>
-                <option value="unpaid">Unpaid</option>
-              </select>
-            </div>
           </div>
 
           <div>
@@ -160,8 +146,8 @@ const ReccuirngBillPopUp = ({
             </label>
             <input
               id="dueDate"
-              name="dueDate"
-              value={formData.dueDate}
+              name="date"
+              value={formData.date}
               onChange={handleChange}
               type="text"
               placeholder="e.g. 14th"
@@ -178,8 +164,8 @@ const ReccuirngBillPopUp = ({
             </label>
             <input
               id="amount"
-              name="amount"
-              value={formData.amount}
+              name="bill_amount"
+              value={formData.bill_amount}
               onChange={handleChange}
               type="number"
               placeholder="e.g. 300"

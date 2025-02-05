@@ -12,12 +12,12 @@ type ListProps = {
 const BillsList: React.FC<ListProps> = ({ inputValue, option, bills }) => {
   const filteredDataByName = Array.isArray(bills)
     ? bills.filter((item: any) =>
-        item.billName.toLowerCase().includes(inputValue.trim().toLowerCase())
+        item.billTitle.toLowerCase().includes(inputValue.trim().toLowerCase())
       )
     : [];
 
   const filterFunction = (active: any, data: any) => {
-    let filteredData = [...data];
+    let filteredData = [...data];   
 
     switch (active) {
       case "High":
@@ -44,7 +44,7 @@ const BillsList: React.FC<ListProps> = ({ inputValue, option, bills }) => {
           <div className="max-w-[319px]  w-full flex gap-[16px]">
             {/* <Image alt="Icon" src={billIcon} width={30} height={30} /> */}
             <span className="text-[14px] font-bold ">
-              {subscription.billName}
+              {subscription.billTitle}
             </span>
           </div>
           <div className="flex justify-between gap-x-[10px] max-w-[252px] w-full">
@@ -56,12 +56,13 @@ const BillsList: React.FC<ListProps> = ({ inputValue, option, bills }) => {
                     : "text-gray-400"
                 }`}
               >
-                {subscription.frequency}-{subscription.dueDate}
+                {subscription.frequency}-{subscription.date}
               </span>
             </div>
             <div className="max-w-[100px] w-full">
               <span className="text-[14px] font-bold">
-                ${subscription.amount.toFixed(2)}
+                ${subscription.bill_amount}
+                {console.log(subscription)}
               </span>
             </div>
           </div>

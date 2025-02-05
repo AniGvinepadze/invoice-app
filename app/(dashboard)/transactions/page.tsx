@@ -10,6 +10,13 @@ import Pagination from "@/app/components/moleculs/Transaction/Paginations";
 
 type SortType = "A" | "Z" | "High" | "Low" | "Latest";
 
+interface Transaction {
+  sender: string;
+  category: string;
+  date: string;
+  amount: number;
+}
+
 export default function TransactionsPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
@@ -18,10 +25,11 @@ export default function TransactionsPage() {
   const [isCategoryVisible, setIsCategoryVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setIsLoading] = useState<boolean>(false);
-  const [newTransaction, setNewTransaction] = useState({
-    RecipientOrSender: "",
+  const [newTransaction, setNewTransaction] = useState<Transaction>({
+    sender: "",
     category: "",
-    Amount: "",
+    amount: 0,
+    date: "",
   });
 
   const toggleSortVisibility = () => {
@@ -33,18 +41,20 @@ export default function TransactionsPage() {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type } = e.target;
     setNewTransaction({
       ...newTransaction,
       [e.target.name]: e.target.value,
+      [name]: type === "number" ? Number(value) || 0 : value,
     });
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:3001/transactions",
+        
         newTransaction
       );
       setIsModalOpen(false);
@@ -103,9 +113,9 @@ export default function TransactionsPage() {
               <form onSubmit={handleSubmit}>
                 <input
                   type="text"
-                  name="RecipientOrSender"
+                  name="sender"
                   placeholder="Recipient or Sender"
-                  value={newTransaction.RecipientOrSender}
+                  value={newTransaction.sender}
                   onChange={handleInputChange}
                   className="w-full p-2 mb-4 border border-gray-300 rounded-md"
                   required
@@ -132,12 +142,21 @@ export default function TransactionsPage() {
                   <option value="Transportation">Transportation</option>
                   <option value="Personal">Personal Care</option>
                 </select>
+                <input
+                  type="date"
+                  name="date"
+                  placeholder="date"
+                  value={newTransaction.date}
+                  onChange={handleInputChange}
+                  className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+                  required
+                />
 
                 <input
                   type="number"
-                  name="Amount"
+                  name="amount"
                   placeholder="Amount"
-                  value={newTransaction.Amount}
+                  value={newTransaction.amount}
                   onChange={handleInputChange}
                   className="w-full p-2 mb-4 border border-gray-300 rounded-md"
                   required

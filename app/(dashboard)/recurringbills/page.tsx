@@ -17,6 +17,7 @@ export default function RecurringBills() {
   const [bills, setBills] = useState<any[]>([]);
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
+
   const token = getCookie("accessToken") as string;
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function RecurringBills() {
         const response = await axios.get(
           "http://localhost:3001/auth/current-user",
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { authorization: `Bearer ${token}` },
           }
         );
         setUser(response.data);
@@ -46,12 +47,18 @@ export default function RecurringBills() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3001/reccuringbills");
-        if (!response.ok) throw new Error("Failed to fetch bills");
-        const data = await response.json();
-        setBills(data);
-      } catch (error) {
-        console.error("Error fetching bills:", error);
+        const response = await axios.get(
+          "http://localhost:3001/reccuringbills",
+          {
+            headers: { authorization: `Bearer ${token}` },
+          }
+        );
+        console.log(response.data, "response.dataresponse.data");
+        setBills(response.data);
+      } catch (err) {
+        console.error("Error fetching bills:", err);
+        console.error("Error fetching user:", err);
+        router.push("/login");
       }
     };
 
