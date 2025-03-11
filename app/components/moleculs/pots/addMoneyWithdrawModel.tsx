@@ -1,8 +1,9 @@
 'use client';
 import { Progress } from '@/components/ui/progress';
-import React, { useEffect, useState } from 'react';
-import data from '@/data.json';
+import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
+import closeSvg from '@/public/assets/close.svg';
+import Image from 'next/image';
 
 interface IPot {
   potName: string;
@@ -27,20 +28,13 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [inputAmount, setInputAmount] = useState<number | null>(null);
 
-  const percentage = Number(
-    (100 * (newTotal ? newTotal : pot.total)) / pot.target
-  ).toFixed(2);
-  const newAmount: number = title.startsWith('Withdraw')
-    ? +(newTotal ?? pot.total) - (inputAmount ?? 0)
-    : +(newTotal ?? pot.total) + (inputAmount ?? 0);
+  const currentTotal = newTotal ?? pot.total;
+  const percentage = Math.min(100, (currentTotal / pot.target) * 100 || 0);
 
-  const [newPercentage, setNewPercentage] = useState<number | null | undefined>(
-    null
-  );
-
-  useEffect(() => {
-    setNewPercentage(Number((100 * newAmount) / pot.target));
-  }, [newAmount]);
+  const newAmount = title.startsWith('Withdraw')
+    ? currentTotal - (inputAmount ?? 0)
+    : currentTotal + (inputAmount ?? 0);
+  const newPercentage = Math.min(100, (newAmount / pot.target) * 100 || 0);
 
   const colorMap: Record<string, string> = {
     '#277C78': 'bg-green-700',
@@ -53,187 +47,125 @@ const AddWithdrawModal: React.FC<AddWithdrawModalProps> = ({
   const handleSubmit = () => {
     if (!inputAmount || inputAmount <= 0) {
       alert('Invalid amount');
-      setInputAmount(null);
       return;
     }
 
     if (title.startsWith('Withdraw')) {
-      if (inputAmount > (newTotal ?? pot.total)) {
+      if (inputAmount > currentTotal) {
         alert('Withdrawal amount exceeds total saved');
-        setInputAmount(null);
         return;
       }
       handleNewTotal((prev) => (prev ?? pot.total) - inputAmount);
     } else {
-      if ((newTotal ?? pot.total) + inputAmount > pot.target) {
-        alert('Cannot exceed the target amount');
-        setInputAmount(null);
-        return;
-      }
       handleNewTotal((prev) => (prev ?? pot.total) + inputAmount);
     }
 
     setInputAmount(null);
-    setNewPercentage(null);
+    setIsOpen(false);
   };
-
-  const value = +percentage > 100 ? 100 : +percentage;
-  const newPercentageValue = newPercentage
-    ? +newPercentage.toFixed(2) > 100
-      ? 100
-      : newPercentage
-    : null;
 
   return (
     <>
       <button
-        className='bg-[#f8f4f0] w-full hover:bg-white text-[12px] md:text-[14px] md:leading-5 font-bold text-[#201f24] flex justify-center py-[16px] rounded-lg cursor-pointer border border-[#f8f4f0] hover:border-[#98908b] transition-colors ease-in-out duration-500 xl:leading-[27px]'
+        className='bg-[#f8f4f0] w-full hover:bg-white text-[12px] md:text-[14px] font-bold text-[#201f24] py-[16px] rounded-lg border border-[#f8f4f0] hover:border-[#98908b] transition-colors'
         type='button'
         onClick={() => setIsOpen(true)}
       >
         {title}
       </button>
+
       {isOpen && (
         <div
-          className={cn(
-            'fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300',
-            { 'opacity-100': isOpen, 'opacity-0 pointer-events-none': !isOpen }
-          )}
+          className='fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50'
           onClick={() => setIsOpen(false)}
         >
           <div
-            className={cn(
-              'bg-white max-w-[560px] w-full p-8 rounded-lg shadow-lg transition-transform duration-300 transform',
-              { 'scale-100 opacity-100': isOpen, 'scale-95 opacity-0': !isOpen }
-            )}
+            className='bg-white max-w-[560px] w-full p-8 rounded-lg shadow-lg'
             onClick={(e) => e.stopPropagation()}
           >
             <div className='flex justify-between'>
-              <h3>Add to '{pot.potName}'</h3>
-              <span>X</span>
-            </div>
-            <p>
-              Add money to your pot to keep it separate from your main balance.
-              As soon as you add this money, it will be deducted from your
-              current balance.
-            </p>
-            <div>
-              <div className='flex mt-[42px] justify-between'>
-                <span className='font-normal text-sm text-[#696868]'>
-                  Total Saved
-                </span>
-                <span className='font-bold text-3xl text-[#201f24]'>
-                  $ {newTotal}
+              <h3 className=' font-bold text-3xl mb-[20px] text-[#201f24]'>
+                {title} '{pot.potName}'
+              </h3>
+
+              <div className='flex justify-between cursor-pointer'>
+                <span
+                  className='cursor-pointer '
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Image src={closeSvg} alt='close button' />
                 </span>
               </div>
-              <div className='mt-4'>
+            </div>
+
+            <div className='mt-6'>
+              <div className='flex justify-between'>
+                <span className='text-sm text-[#696868]'>New Amount</span>
+                <span className='text-3xl font-bold text-[#201f24]'>
+                  $ {currentTotal}
+                </span>
+              </div>
+
+              <div className='mt-4 relative h-2 w-full bg-[#f8f4f0] rounded-full overflow-hidden'>
                 <div
                   className={cn(
-                    'relative h-2 w-full overflow-hidden rounded-full bg-[#f8f4f0]'
+                    'absolute h-full transition-all',
+                    title.startsWith('Withdraw')
+                      ? 'bg-[#c94736]'
+                      : 'bg-[#277c78]'
                   )}
-                >
-                  <div
-                    className={cn(
-                      `h-full w-full flex-1 absolute top-0 bg-primary transition-all z-30 ${
-                        colorMap[pot.theme]
-                      }`
-                    )}
-                    style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-                  ></div>
-                  {title.startsWith('Withdraw') ? (
-                    <div
-                      className={cn(
-                        `h-full w-full absolute z-40  top-0  bg-[#c94736] transition-all `
-                      )}
-                      style={{
-                        transform: `translateX(-${
-                          100 - (newPercentageValue ? +newPercentageValue : 0)
-                        }%)`,
-                      }}
-                    ></div>
-                  ) : (
-                    <div
-                      className={cn(
-                        `h-full w-full absolute z-20  top-0  bg-[#277c78] transition-all `
-                      )}
-                      style={{
-                        transform: `translateX(-${
-                          100 - (newPercentageValue ? +newPercentageValue : 0)
-                        }%)`,
-                      }}
-                    ></div>
+                  style={{ width: `${percentage}%` }}
+                />
+                <div
+                  className={cn(
+                    'absolute h-full transition-all',
+                    colorMap[pot.theme] || 'bg-gray-500'
                   )}
-                </div>
-                {title.startsWith('Withdraw') ? (
-                  <div className='flex justify-between mt-[13px]'>
-                    <span
-                      className={`font-bold text-[12px] leading-[18px] text-[#696868] ${
-                        Number(newPercentage)
-                          ? 'text-[#c94736]'
-                          : 'text-[#696868]'
-                      }`}
-                    >
-                      {Number(newPercentage)
-                        ? Number(newPercentage).toFixed(2)
-                        : +percentage}{' '}
-                      %
-                    </span>
-
-                    <span className='font-normal text-[12px] leading-[18px] text-[#696868]'>
-                      Target of ${pot.target}
-                    </span>
-                  </div>
-                ) : (
-                  <div className='flex justify-between mt-[13px]'>
-                    <span
-                      className={`font-bold text-[12px] leading-[18px] text-[#696868] ${
-                        Number(newPercentage)
-                          ? 'text-[#277c78]'
-                          : 'text-[#696868]'
-                      }`}
-                    >
-                      {Number(newPercentage)
-                        ? Number(newPercentage).toFixed(2)
-                        : +percentage}{' '}
-                      %
-                    </span>
-
-                    <span className='font-normal text-[12px] leading-[18px] text-[#696868]'>
-                      Target of ${pot.target}
-                    </span>
-                  </div>
-                )}
+                  style={{ width: `${newPercentage}%` }}
+                />
               </div>
-              <div className='mt-[20px] gap-1 flex flex-col'>
-                <span className='font-bold text-[12px] leading-6'>
-                  {title.startsWith('Withdraw')
-                    ? 'Amount to Withdraw'
-                    : 'Amount to Add'}
-                </span>
-                <label className='border rounded-[8px]  focus:border-0 flex py-3  px-[20px] border-[#98908b] justify-center gap-4'>
-                  <span>$</span>
 
-                  <input
-                    type='number'
-                    className='w-full'
-                    placeholder=''
-                    value={inputAmount ? inputAmount : ''}
-                    onChange={(e) => setInputAmount(Number(e.target.value))}
-                    min={0}
-                    max={
-                      title.startsWith('Withdraw') ? +pot.total : +pot.target
-                    }
-                  />
-                </label>
+              <div className='flex justify-between mt-3'>
+                <span
+                  className={`text-sm font-bold ${
+                    newPercentage !== percentage
+                      ? 'text-[#277c78]'
+                      : 'text-[#696868]'
+                  }`}
+                >
+                  {newPercentage.toFixed(2)}%
+                </span>
+                <span className='text-sm text-[#696868]'>
+                  Target: ${pot.target}
+                </span>
               </div>
             </div>
+
+            <div className='mt-6'>
+              <span className='font-bold text-sm'>
+                {title.startsWith('Withdraw')
+                  ? 'Amount to Withdraw'
+                  : 'Amount to Add'}
+              </span>
+              <label className='border rounded-lg flex py-3 px-4 border-[#98908b] mt-1'>
+                <span className='mr-2'>$</span>
+                <input
+                  type='number'
+                  className='w-full bg-transparent outline-none'
+                  value={inputAmount ?? ''}
+                  onChange={(e) =>
+                    setInputAmount(Number(e.target.value) || null)
+                  }
+                  min={0}
+                  max={title.startsWith('Withdraw') ? currentTotal : pot.target}
+                />
+              </label>
+            </div>
+
             <button
               type='button'
               className='mt-4 bg-[#201f24] w-full text-white p-2 rounded'
-              onClick={() => {
-                setIsOpen(false);
-                handleSubmit();
-              }}
+              onClick={handleSubmit}
             >
               {title.startsWith('Withdraw')
                 ? 'Confirm Withdrawal'

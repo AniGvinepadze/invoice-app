@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
-
+import closeSvg from '@/public/assets/close.svg';
+import Image from 'next/image';
 interface IDeleteModal {
   handleDelete: React.Dispatch<React.SetStateAction<boolean>>;
   handleValue: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -22,17 +23,21 @@ const DeleteModal: React.FC<IDeleteModal> = ({ handleDelete, handleValue }) => {
             e.stopPropagation();
           }}
         >
-          <div className='flex justify-between cursor-pointer'>
-            <span className='cursor-pointer ' onClick={() => handleValue('')}>
-              X
-            </span>
+          <div className='flex justify-between mb-[20px]'>
+            <p className=' font-bold text-3xl text-[#201f24]'>
+              Delete ‘Savings’?
+            </p>
+            <div className='flex justify-between cursor-pointer'>
+              <span className='cursor-pointer ' onClick={() => handleValue('')}>
+                <Image src={closeSvg} alt='close button' />
+              </span>
+            </div>
           </div>
-          <p>
-            Add money to your pot to keep it separate from your main balance. As
-            soon as you add this money, it will be deducted from your current
-            balance.
+          <p className='mb-[20px] text-sm text-[#696868]'>
+            Are you sure you want to delete this pot? This action cannot be
+            reversed, and all the data inside it will be removed forever.
           </p>
-          <div></div>
+
           <button
             type='button'
             className='mt-4 bg-[#201f24] w-full text-white p-2 rounded'
@@ -41,7 +46,7 @@ const DeleteModal: React.FC<IDeleteModal> = ({ handleDelete, handleValue }) => {
               handleValue('');
             }}
           >
-            Confirm
+            Yes, Confirm Deletion
           </button>
         </div>
       </div>
