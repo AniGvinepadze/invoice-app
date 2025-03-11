@@ -12,38 +12,36 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import EditModal from './editModel';
 
-interface IPot {
-  potName: string;
-  target: number;
-  total: number;
-  theme: string;
-  _id: string;
-}
 interface IProps {
-  pot: IPot;
-
-  index: number;
+  pot: IPots;
   handleSetPots: React.Dispatch<React.SetStateAction<IPots[] | undefined>>;
 }
 
 export interface IViewerPot {
-  total: number | undefined;
+  total: number;
   potName: string;
   target: number;
   theme: string;
   _id: string;
 }
 
-const PotsContent: React.FC<IProps> = ({ pot, index, handleSetPots }) => {
-  const [viewerPot, setViewerPot] = useState<IViewerPot | null>(pot);
-  const [newTotal, setNewTotal] = useState<number | undefined>(pot.total);
+const PotsContent: React.FC<IProps> = ({ pot, handleSetPots }) => {
+  const [viewerPot, setViewerPot] = useState<IPots | null>(pot);
+  const [newTotal, setNewTotal] = useState<number>(pot.total);
   const [val, setValue] = useState<string | undefined>();
   const [deleteItem, setDelete] = useState(false);
-  const router = useRouter();
 
-  const percenteg = Number(
-    (100 * (newTotal ? newTotal : pot.total)) / pot.target
-  ).toFixed(2);
+  const token = getCookie('accessToken') as string;
+
+  useEffect(() => {
+    setViewerPot(pot);
+    setNewTotal(pot.total);
+  }, [pot]);
+
+  const percentage =
+    pot.target === 0 ? 0 : (100 * (newTotal || 0)) / pot.target;
+  const percenteg = percentage.toFixed(2);
+
   const colorMap: Record<string, string> = {
     '#277C78': 'bg-green-700',
     '#626070': 'bg-gray-600',
@@ -52,48 +50,43 @@ const PotsContent: React.FC<IProps> = ({ pot, index, handleSetPots }) => {
     '#826CB0': 'bg-purple-500',
   };
 
-  const token = getCookie('accessToken') as string;
-
   useEffect(() => {
-    const newPot = {
-      ...pot,
-      total: newTotal,
-    };
-
-    setViewerPot(newPot);
-
     const updatePot = async () => {
+      const newPot = { ...viewerPot, total: newTotal };
+
       try {
         await axios.patch(`http://localhost:3001/pots/${pot._id}`, newPot, {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
+          headers: { authorization: `Bearer ${token}` },
         });
+        setViewerPot(newPot);
       } catch (err) {
-        console.log(err);
+        console.error('Failed to update pot:', err);
+
+        setNewTotal(viewerPot.total);
       }
     };
-    updatePot();
-  }, [newTotal]);
+
+    if (newTotal !== viewerPot.total) {
+      updatePot();
+    }
+  }, [newTotal, pot._id, token, viewerPot]);
 
   useEffect(() => {
-    if (deleteItem) {
-      const deletePot = async () => {
-        try {
-          await axios.delete(`http://localhost:3001/pots/${pot._id}`, {
-            headers: {
-              authorization: `Bearer ${token}`,
-            },
-          });
-        } catch (err) {
-          console.log(err);
-        }
-      };
-      setViewerPot(null);
-      deletePot();
-      router.refresh();
-    }
-  }, [deleteItem, val]);
+    const deletePot = async () => {
+      try {
+        await axios.delete(`http://localhost:3001/pots/${pot._id}`, {
+          headers: { authorization: `Bearer ${token}` },
+        });
+        handleSetPots((prev) => prev?.filter((p) => p._id !== pot._id));
+      } catch (err) {
+        console.error('Failed to delete pot:', err);
+      } finally {
+        setDelete(false);
+      }
+    };
+
+    if (deleteItem) deletePot();
+  }, [deleteItem, pot._id, token, handleSetPots]);
 
   if (!viewerPot) return null;
 
@@ -103,22 +96,17 @@ const PotsContent: React.FC<IProps> = ({ pot, index, handleSetPots }) => {
         <div className='flex justify-between'>
           <div className='flex gap-4 items-center'>
             <div
-              className={`w-4 h-4  rounded-full ${colorMap[viewerPot.theme]}`}
+              className={`w-4 h-4 rounded-full ${colorMap[viewerPot.theme]}`}
             ></div>
-            <h3 className='font-bold  text-[#201f24] text-xl '>
-              {' '}
+            <h3 className='font-bold text-[#201f24] text-xl'>
               {viewerPot.potName}
             </h3>
           </div>
-          <DeleteEditModal
-            handleValue={setValue}
-
-            // handleSetPots={handleSetPots}
-          />
+          <DeleteEditModal handleValue={setValue} />
         </div>
         <div>
           <div className='flex mt-[42px] justify-between'>
-            <span className='font-normal text-sm text-[#696868] '>
+            <span className='font-normal text-sm text-[#696868]'>
               Total Saved
             </span>
             <span className='font-bold text-3xl text-[#201f24]'>
@@ -127,20 +115,19 @@ const PotsContent: React.FC<IProps> = ({ pot, index, handleSetPots }) => {
           </div>
           <div className='mt-4'>
             <Progress
-              value={+percenteg > 100 ? 100 : +percenteg}
+              value={Math.min(Number(percenteg), 100)}
               className={`${colorMap[viewerPot.theme]}`}
             />
             <div className='flex justify-between mt-[13px]'>
               <span className='font-bold text-[12px] leading-[18px] text-[#696868]'>
-                {+percenteg} %
+                {percenteg} %
               </span>
-
               <span className='font-normal text-[12px] leading-[18px] text-[#696868]'>
                 Target of ${viewerPot.target}
               </span>
             </div>
           </div>
-          <div className='mt-8 flex justify-between gap-4 '>
+          <div className='mt-8 flex justify-between gap-4'>
             <AddWithdrawModal
               title='+ Add Money'
               pot={pot}
@@ -156,15 +143,15 @@ const PotsContent: React.FC<IProps> = ({ pot, index, handleSetPots }) => {
           </div>
         </div>
       </div>
-      {val && val.startsWith('Delete') && (
+
+      {val?.startsWith('Delete') && (
         <DeleteModal handleDelete={setDelete} handleValue={setValue} />
       )}
-      {val && val.startsWith('Edit') && (
+      {val?.startsWith('Edit') && (
         <EditModal
-          handleDelete={setDelete}
           handleValue={setValue}
           handleViewerPot={setViewerPot}
-          viewerPot={viewerPot}
+          viewerPot={pot as IViewerPot}
         />
       )}
     </>

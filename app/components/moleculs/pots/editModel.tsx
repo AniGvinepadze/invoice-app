@@ -8,20 +8,21 @@ import {
 } from '@/components/ui/select';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { IViewerPot } from './potsContent';
 import axios from 'axios';
+import { IPots } from '@/app/(dashboard)/pots/page';
+import closeSvg from '@/public/assets/close.svg';
+import Image from 'next/image';
 
 interface IDeleteModal {
-  handleDelete: React.Dispatch<React.SetStateAction<boolean>>;
-  handleValue: React.Dispatch<React.SetStateAction<string | undefined>>;
-  handleViewerPot: React.Dispatch<React.SetStateAction<IViewerPot | null>>;
+  handleValue: Dispatch<SetStateAction<string | undefined>>;
+  handleViewerPot: React.Dispatch<React.SetStateAction<IPots | null>>;
   viewerPot: IViewerPot;
 }
 
 const EditModal: React.FC<IDeleteModal> = ({
-  handleDelete,
   handleValue,
   handleViewerPot,
   viewerPot,
@@ -85,8 +86,8 @@ const EditModal: React.FC<IDeleteModal> = ({
     };
     updatePot();
 
-    // reset();
-    handleDelete(false);
+    reset();
+    // handleDelete(false);
     handleValue('');
     setModel(false);
   };
@@ -105,20 +106,23 @@ const EditModal: React.FC<IDeleteModal> = ({
             e.stopPropagation();
           }}
         >
-          <div className='flex justify-between cursor-pointer'>
-            <span className='cursor-pointer ' onClick={() => handleValue('')}>
-              X
-            </span>
+          <div className='flex justify-between mb-[20px]'>
+            <p className=' font-bold text-3xl text-[#201f24]'>Edit Pot</p>
+            <div className='flex justify-between cursor-pointer'>
+              <span className='cursor-pointer ' onClick={() => handleValue('')}>
+                <Image src={closeSvg} alt='close button' />
+              </span>
+            </div>
           </div>
-          <p>
-            Add money to your pot to keep it separate from your main balance. As
-            soon as you add this money, it will be deducted from your current
-            balance.
+          <p className='mb-[20px] text-sm text-[#696868]'>
+            If your saving targets change, feel free to update your pots.
           </p>
           <div>
             <form onSubmit={handleSubmit(onsubmit)}>
-              <span>Pot Name</span>
-              <label className='border rounded-[8px]  focus:border-0 flex py-3  px-[20px] border-[#98908b] justify-center gap-4'>
+              <span className='text-[12px] font-bold text-[#696868]'>
+                Pot Name
+              </span>
+              <label className='border rounded-[8px] mb-4  focus:border-0 flex py-3  px-[20px] border-[#98908b] justify-center gap-4'>
                 <input
                   type='text'
                   className='w-full'
@@ -128,8 +132,10 @@ const EditModal: React.FC<IDeleteModal> = ({
                   {...register('potName')}
                 />
               </label>
-              <span>Target</span>
-              <label className='border rounded-[8px]  focus:border-0 flex py-3  px-[20px] border-[#98908b] justify-center gap-4'>
+              <span className='text-[12px] font-bold text-[#696868]'>
+                Target
+              </span>
+              <label className='border rounded-[8px] mb-4 focus:border-0 flex py-3  px-[20px] border-[#98908b] justify-center gap-4'>
                 <span>$</span>
                 <input
                   type='number'
@@ -140,8 +146,13 @@ const EditModal: React.FC<IDeleteModal> = ({
                   {...register('target')}
                 />
               </label>
-              <div className='flex flex-col space-y-1.5'>
-                <label htmlFor='theme-select'>Theme</label>
+              <div className='flex flex-col space-y-1.5 mb-4'>
+                <label
+                  htmlFor='theme-select'
+                  className='text-[12px] font-bold text-[#696868]'
+                >
+                  Theme
+                </label>
                 <Controller
                   name='theme'
                   control={control}
@@ -170,7 +181,7 @@ const EditModal: React.FC<IDeleteModal> = ({
                               ? 'bg-orange-500'
                               : selectVal === '#826CB0'
                               ? 'bg-purple-500'
-                              : 'bg-gray-300' // Default color
+                              : 'bg-gray-300'
                           }`}
                         ></div>
                         <div className='flex-1 justify-between flex'>
@@ -195,11 +206,9 @@ const EditModal: React.FC<IDeleteModal> = ({
                 />
               </div>
 
-              <p>Your modal content goes here.</p>
               <button
                 type='submit'
                 className='mt-4 bg-red-500 text-white p-2 rounded'
-                // onClick={() => setModel(false)}
               >
                 Confirm
               </button>
