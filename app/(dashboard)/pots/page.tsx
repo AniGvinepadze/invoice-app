@@ -125,7 +125,15 @@ function Pots() {
         </motion.h1>
         <BudgetModal handleNewPot={setNewPot} />
       </div>
-      <div className="grid mt-8 grid-cols-1 xl:grid-cols-2 gap-6 justify-between">
+      <motion.div
+        className="grid mt-8 grid-cols-1 xl:grid-cols-2 gap-6 justify-between "
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.4 }}
+        viewport={{
+          once: true,
+        }}
+      >
         {pots.length > 0 ? (
           pots.map((pot) => (
             <PotsContent key={pot._id} pot={pot} handleSetPots={setPots} />
@@ -135,7 +143,7 @@ function Pots() {
             No pots found. Create a new pot to get started!
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }
