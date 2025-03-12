@@ -34,7 +34,7 @@ export default function SignUpFormFields() {
   };
 
   return (
-    <div className=' w-full  flex items-center justify-center  '>
+    <div className='max-w-[600px] w-full m-32 max-1200:m-20 max-1100:m-16 max-550:m-6 max-400:m-3'>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className='shadow-md  max-w-[560px] w-full bg-white rounded-xl p-6  text-[#696868]'
