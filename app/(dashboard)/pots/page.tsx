@@ -1,11 +1,11 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { getCookie } from 'cookies-next';
-import axios from 'axios';
-import BudgetModal from '@/app/components/organsms/BudgetModal/BudgetModal';
-import PotsContent from '@/app/components/moleculs/pots/potsContent';
-
+"use client";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getCookie } from "cookies-next";
+import axios from "axios";
+import BudgetModal from "@/app/components/organsms/BudgetModal/BudgetModal";
+import PotsContent from "@/app/components/moleculs/pots/potsContent";
+import { motion } from "framer-motion";
 export interface IPots {
   potName: string;
   target: number;
@@ -15,23 +15,24 @@ export interface IPots {
 }
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
 
 const fetchPots = async (token: string): Promise<IPots[] | undefined> => {
   try {
     const res = await axios.get(`${API_BASE_URL}/pots`, {
       headers: { authorization: `Bearer ${token}` },
     });
+
     return res.data;
   } catch (e) {
-    console.error('Error fetching pots:', e);
+    console.error("Error fetching pots:", e);
     return undefined;
   }
 };
 
 const getCurrentUser = async (token: string, router: any, setUser: any) => {
   if (!token) {
-    router.push('/login');
+    router.push("/login");
     return;
   }
   try {
@@ -40,8 +41,8 @@ const getCurrentUser = async (token: string, router: any, setUser: any) => {
     });
     setUser(response.data);
   } catch (err) {
-    console.error('Error fetching current user:', err);
-    router.push('/login');
+    console.error("Error fetching current user:", err);
+    router.push("/login");
   }
 };
 
@@ -53,9 +54,10 @@ const createPot = async (
     const res = await axios.post(`${API_BASE_URL}/pots`, newPot, {
       headers: { authorization: `Bearer ${token}` },
     });
+
     return res.data;
   } catch (e) {
-    console.error('Error adding pot:', e);
+    console.error("Error adding pot:", e);
     return undefined;
   }
 };
@@ -67,7 +69,7 @@ function Pots() {
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const token = getCookie('accessToken') as string;
+  const token = getCookie("accessToken") as string;
 
   useEffect(() => {
     getCurrentUser(token, router, setUser);
@@ -90,7 +92,7 @@ function Pots() {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedPots = await fetchPots(token);
-      console.log(fetchedPots, 'etch');
+
       if (fetchedPots) {
         setPots(fetchedPots.reverse());
       }
@@ -99,28 +101,37 @@ function Pots() {
 
     fetchData();
   }, [token]);
-  console.log(pots, 'postsa');
   if (!user) {
-    return null; // Redirect to login is handled in getCurrentUser
+    return null;
   }
 
   if (isLoading) {
-    return <div>Loading...</div>; // Add a loading state for better UX
+    return <div>Loading...</div>;
   }
 
   return (
-    <div className='px-10 pt-8 pb-[48px] w-full overflow-x-hidden overflow-y-auto h-screen'>
-      <div className='flex justify-between items-center'>
-        <h1 className='font-bold text-3xl'>Pots</h1>
+    <div className="px-10 pt-8 pb-[48px] w-full overflow-x-hidden overflow-y-auto h-screen">
+      <div className="flex justify-between items-center">
+        <motion.h1
+          className="font-bold text-3xl"
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.1 }}
+          viewport={{
+            once: true,
+          }}
+        >
+          Pots
+        </motion.h1>
         <BudgetModal handleNewPot={setNewPot} />
       </div>
-      <div className='grid mt-8 grid-cols-1 xl:grid-cols-2 gap-6 justify-between'>
+      <div className="grid mt-8 grid-cols-1 xl:grid-cols-2 gap-6 justify-between">
         {pots.length > 0 ? (
           pots.map((pot) => (
             <PotsContent key={pot._id} pot={pot} handleSetPots={setPots} />
           ))
         ) : (
-          <div className='col-span-2 text-center text-gray-500'>
+          <div className="col-span-2 text-center text-gray-500">
             No pots found. Create a new pot to get started!
           </div>
         )}

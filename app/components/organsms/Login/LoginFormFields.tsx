@@ -15,7 +15,7 @@ export type FormData = {
 
 export default function LoginFormFields() {
   const [err, setError] = useState<null | string>(null);
-  console.log(err);
+
   const router = useRouter();
   const {
     register,
@@ -31,8 +31,7 @@ export default function LoginFormFields() {
         formData
       );
       setError(null);
-      console.log(';sdaw');
-      console.log(res, 'data');
+   
       if (res.status === 201) {
         setCookie('accessToken', res.data.accessToken, { maxAge: 60 * 60 });
 

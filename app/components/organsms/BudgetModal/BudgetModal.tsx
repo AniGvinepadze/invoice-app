@@ -11,6 +11,7 @@ import {
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { IPots } from '@/app/(dashboard)/pots/page';
+import {motion} from "framer-motion"
 
 interface IBudget {
   handleNewPot: React.Dispatch<React.SetStateAction<IPots | undefined>>;
@@ -39,7 +40,7 @@ const BudgetModal: React.FC<IBudget> = ({ handleNewPot }) => {
       theme: data.selectVal,
       total: 0,
     };
-    console.log(newPot);
+  
 
     handleNewPot(newPot);
     // reset();
@@ -48,13 +49,19 @@ const BudgetModal: React.FC<IBudget> = ({ handleNewPot }) => {
 
   return (
     <>
-      <button
+      <motion.button
         className='bg-[#201F24] text-normal font-bold text-white flex justify-center p-[16px] rounded-lg cursor-pointer hover:bg-[#696868] transition-colors ease-in-out duration-300 leading-[27px] z-40'
         type='button'
         onClick={() => setIsModalOpen(true)}
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.1 }}
+        viewport={{
+          once: true,
+        }}
       >
         + Add New Pot
-      </button>
+      </motion.button>
       {isModalOpen && (
         <div
           className='fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300'

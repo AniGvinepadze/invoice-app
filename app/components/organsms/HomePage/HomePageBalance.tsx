@@ -2,30 +2,30 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getCookie } from "cookies-next";
+
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
 export default function HomePageBalance() {
-  const [user, setUser] = useState<{ income: number; expenses: number } | null>(null);
+  const [user, setUser] = useState<{ income: number; expenses: number } | null>(
+    null
+  );
   const [remainingBalance, setRemainingBalance] = useState<number | null>(null);
 
   const router = useRouter();
 
   const getCurrentUser = async (token: string) => {
     try {
-      // Fetch transactions
       const res1 = await axios.get("http://localhost:3001/transactions");
       const transactions = res1.data;
-
-      // Calculate total expenses
       const totalAmount = transactions.reduce(
-        (sum: number, transaction: { amount: number }) => sum + transaction.amount,
+        (sum: number, transaction: { amount: number }) =>
+          sum + transaction.amount,
         0
       );
 
       const initialBalance = 9597.25;
       setRemainingBalance(initialBalance - totalAmount);
-
-      // Fetch user details
       const res2 = await axios.get("http://localhost:3001/auth/current-user", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -40,7 +40,7 @@ export default function HomePageBalance() {
   };
 
   useEffect(() => {
-    const token = getCookie("auth_token");
+    const token = getCookie("accessToken");
     if (token) {
       getCurrentUser(token as string);
     }
@@ -49,29 +49,61 @@ export default function HomePageBalance() {
   return (
     <div className="m-auto max-w-[1340px] w-full mb-10">
       <div className="flex justify-between mb-6">
-        <h2 className="font-publicSans font-bold text-4xl text-[#201F24]">
+        <motion.h2
+          className="font-publicSans font-bold text-4xl text-[#201F24] "
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.1 }}
+          viewport={{
+            once: true,
+          }}
+        >
           Overview
-        </h2>
+        </motion.h2>
       </div>
       <div className="flex sm:flex-col md:!flex-row justify-between md:space-x-4 sm:gap-[12px] md:gap-0">
-        <div className="bg-[#201F24] p-[24px] rounded-xl flex-1">
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          viewport={{
+            once: true,
+          }}
+          className="bg-[#201F24] p-[24px] rounded-xl flex-1"
+        >
           <h5 className="text-[14px] font-normal text-[#FFFFFF]">Balance</h5>
           <h3 className="text-[32px] font-bold leading-8 text-[#FFFFFF] mt-[12px]">
-            ${remainingBalance !== null ? remainingBalance.toFixed(2) : 0} 
+            ${remainingBalance !== null ? remainingBalance.toFixed(2) : 0}
           </h3>
-        </div>
-        <div className="bg-[#FFFFFF] p-[24px] rounded-xl flex-1">
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          viewport={{
+            once: true,
+          }}
+          className="bg-[#FFFFFF] p-[24px] rounded-xl flex-1"
+        >
           <h5 className="text-[14px] font-normal text-[#696868]">Income</h5>
           <h3 className="text-[32px] font-bold leading-8 text-[#201F24] mt-[12px]">
-            ${user?.income ?? 0 }
+            ${user?.income ?? 0}
           </h3>
-        </div>
-        <div className="bg-[#FFFFFF] p-[24px] rounded-xl flex-1">
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          viewport={{
+            once: true,
+          }}
+          className="bg-[#FFFFFF] p-[24px] rounded-xl flex-1"
+        >
           <h5 className="text-[14px] font-normal text-[#696868]">Expenses</h5>
           <h3 className="text-[32px] font-bold leading-8 text-[#201F24] mt-[12px]">
-            ${user?.expenses ??  0}
+            ${user?.expenses ?? 0}
           </h3>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

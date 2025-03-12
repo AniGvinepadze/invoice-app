@@ -9,7 +9,7 @@ import DeleteModal from './deleteModal';
 import { IPots } from '@/app/(dashboard)/pots/page';
 import { getCookie } from 'cookies-next';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import {motion} from "framer-motion"
 import EditModal from './editModel';
 
 interface IProps {
@@ -92,7 +92,11 @@ const PotsContent: React.FC<IProps> = ({ pot, handleSetPots }) => {
 
   return (
     <>
-      <div className='xl:p-6 px-6 py-8 bg-white rounded-[12px]'>
+      <motion.div className='xl:p-6 px-6 py-8 bg-white rounded-[12px]' initial="hidden"
+        animate="visible"
+        variants={{
+          visible: { transition: { staggerChildren: 0.3 } },
+        }}>
         <div className='flex justify-between'>
           <div className='flex gap-4 items-center'>
             <div
@@ -142,7 +146,7 @@ const PotsContent: React.FC<IProps> = ({ pot, handleSetPots }) => {
             />
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {val?.startsWith('Delete') && (
         <DeleteModal handleDelete={setDelete} handleValue={setValue} />

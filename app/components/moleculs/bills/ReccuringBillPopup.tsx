@@ -8,9 +8,14 @@ import React, { useEffect, useState } from "react";
 const ReccuirngBillPopUp = ({
   setShow,
   addBill,
+  bills,
+  setBills
+
 }: {
+  bills: any[]
   setShow: any;
   addBill: any;
+  setBills:any
 }) => {
   const [user, setUser] = useState();
   const [formData, setFormData] = useState({
@@ -34,11 +39,60 @@ const ReccuirngBillPopUp = ({
 
   const token = getCookie("accessToken") as string;
 
+  const sendPostRequest = async () => {
+    if (
+      !formData.billTitle.trim() ||
+      !formData.date.trim() ||
+      !formData.bill_amount.trim()
+    ) {
+      return;
+    }
+    
+     try {
+      const response = await axios.post(
+        "http://localhost:3001/reccuringbills",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            dueDate: formData.date,
+          }),
+        }
+      );
+      handleClickDisappear();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      const response = await axios.post("http://localhost:3001/reccuringbills", formData, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+  
+      const addedBill = response.data; 
+  
+      addBill(addedBill);
+    
+      handleClickDisappear();
+    } catch (e) {
+      console.error("Error adding bill:", e);
+    }
+  };
+  
+
   useEffect(() => {
     const getCurrentUser = async () => {
       if (!token || !router) return;
-
       try {
+      
         const response = await axios.get(
           "http://localhost:3001/auth/current-user",
           {
@@ -54,53 +108,24 @@ const ReccuirngBillPopUp = ({
     getCurrentUser();
   }, [token, router]);
 
-  const sendPostRequest = async () => {
-    if (
-      !formData.billTitle.trim() ||
-      !formData.date.trim() ||
-      !formData.bill_amount.trim()
-    ) {
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3001/reccuringbills",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...formData,
-            dueDate: formData.date,
-          }),
-        }
-      );
-
-        // const newBill = await response.json();
-        // addBill(newBill);
-      alert("Bill added successfully!");
-      handleClickDisappear();
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await axios.post("http://localhost:3001/reccuringbills", formData, {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      });
-      alert("Bill added successfully!");
-      handleClickDisappear();
-    } catch (e) {
-      console.error("Error adding bill:", e);
-    }
-  };
-
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/reccuringbills",
+          {
+            headers: { authorization: `Bearer ${token}` },
+          }
+        );
+        setBills(response.data);
+      } catch (err) {
+        console.error("Error fetching bills:", err);
+      }
+    };
+  
+    fetchData();
+  }, [bills]); 
+  
   return (
     <div className="fixed z-10 inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
       <div className="bg-white rounded-lg shadow-lg w-[560px] p-6">

@@ -45,7 +45,7 @@ export default function Pagination({
     axios
       .get("http://localhost:3001/transactions")
       .then((response) => {
-        console.log(response.data);
+        response.data;
         let transactions: Transaction[] = response.data;
 
         if (search) {
@@ -73,9 +73,9 @@ export default function Pagination({
             (a, b) => parseFloat(a.amount) - parseFloat(b.amount)
           );
         } else if (sort === "Latest") {
-        //   transactions.sort(
-        //     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-        //   );
+          //   transactions.sort(
+          //     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          //   );
         }
 
         setTransactions(transactions);
