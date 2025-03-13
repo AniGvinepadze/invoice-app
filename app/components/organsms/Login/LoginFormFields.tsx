@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation"; // ✅ Import useSearchParams
+import { useRouter, useSearchParams } from "next/navigation"; 
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { setCookie } from "cookies-next";

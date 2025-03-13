@@ -1,15 +1,33 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { getCookie } from "cookies-next";
+import { deleteCookie, getCookie } from "cookies-next";
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { div } from "framer-motion/client";
+import Image from "next/image";
+import person from "../../../../public/assets/avatars/person.jpg";
+import logout2 from "../../../../public/assets/avatars/logout2.png"
+
+type Users = {
+  fullName: string;
+  email: string;
+  _id: string;
+  avatar: string;
+  posts: string[];
+};
 
 export default function HomePageBalance() {
-  const [user, setUser] = useState<{ income: number; expenses: number } | null>(
-    null
-  );
+  //  const [users,setUsers] = useState<Users[]>([])
+  const [user, setUser] = useState<{
+    income: number;
+    expenses: number;
+    fullName: string;
+    email: string;
+    _id: string;
+    avatar: string;
+  } | null>(null);
   const [remainingBalance, setRemainingBalance] = useState<number | null>(null);
 
   const router = useRouter();
@@ -25,6 +43,7 @@ export default function HomePageBalance() {
       );
 
       const initialBalance = 9597.25;
+
       setRemainingBalance(initialBalance - totalAmount);
       const res2 = await axios.get("http://localhost:3001/auth/current-user", {
         headers: {
@@ -33,11 +52,29 @@ export default function HomePageBalance() {
       });
 
       setUser(res2.data);
+      console.log("User Avatar URL:", user?.avatar);
+      console.log("User data response:", res2.data);
     } catch (error) {
       console.error("Error fetching data:", error);
       router.push("/login");
     }
   };
+
+  // const getAllUser = async(token:string) => {
+  //   const res = await axios.get('http://localhost:3001/users',{
+  //     headers:{
+  //       Authorization: `Bearer ${token}`
+  //     }
+  //   })
+  //   setUsers(res.data)
+  //   console.log(res.data,"resdata")
+
+  // }
+
+  const signOut= () =>{
+    deleteCookie('accessToken')
+    router.push('/login')
+  }
 
   useEffect(() => {
     const token = getCookie("accessToken");
@@ -60,7 +97,28 @@ export default function HomePageBalance() {
         >
           Overview
         </motion.h2>
+
+          <div className="max-w-[360px] w-full flex justify-between">
+
+        <div className="max-w-[260px] w-full bg-white rounded-lg  flex justify-center items-center gap-4 p-2 cursor-pointer hover:scale-110 transition-all ease-in-out duration-300 ">
+          <Image
+            src={user?.avatar?.startsWith("http") ? user.avatar : person}
+            alt="User Avatar"
+            width={35}
+            height={35}
+            className="rounded-full object-contain"
+          />
+          <h1 className="text-base font-semibold text-[#201F24] hover:text-[#6b6a6c] transition-all ease-in-out duration-300">{user?.fullName}</h1>
+          </div>
+          <div className="max-w-[70px] w-full bg-white rounded-full p-3 flex justify-center cursor-pointer items-center hover:scale-110 transition-all ease-in-out duration-300  ">
+             <button onClick={signOut}>
+              <Image src={logout2} alt="logout" width={35} height={35}/>
+             </button>
+          </div>
+
+        </div>
       </div>
+
       <div className="flex sm:flex-col md:!flex-row justify-between md:space-x-4 sm:gap-[12px] md:gap-0">
         <motion.div
           initial={{ opacity: 0, y: 100 }}
