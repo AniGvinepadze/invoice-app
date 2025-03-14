@@ -150,10 +150,10 @@ export default function LoginFormFields() {
           className="flex justify-center mt-6 gap-4 items-center w-full bg-white border border-[#201F24] rounded-lg p-2 cursor-pointer transition-colors ease-in-out duration-300"
           onClick={signInWithGoogle}
         >
-          <p className="font-semibold text-normal ml-2 hover:text-[#201F24] cursor-pointer transition-colors ease-in-out duration-200 max-400:ml-0">
+      <p className="font-semibold text-normal ml-2 hover:text-[#201F24] cursor-pointer transition-colors ease-in-out duration-200 max-400:ml-0  ">
             Sign In With Google
           </p>
-          <Image src={google} alt="google" width={30} height={30} />
+          <Image src={google} alt="google" width={30} height={30} className="object-contain max-400:w-[24px] max-400:h-[24px] max-300:w-[20px]  max-300:h-[20px]" />
         </button>
 
         <div className="flex justify-center mt-10">
