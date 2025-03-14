@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
-import google from '/public/assets/googlee.jpg';
+// import google from '/public/assets/googlee.jpg';
 import Image from 'next/image';
 
 export type FormData = {
@@ -132,7 +132,7 @@ export default function LoginFormFields() {
           <p className='font-semibold text-normal ml-2 hover:text-[#201F24] cursor-pointer transition-colors ease-in-out duration-200 max-400:ml-0'>
             Sign In With Google
           </p>
-          <Image src={google} alt='google' width={30} height={30} />
+          {/* <Image src={google} alt='google' width={30} height={30} /> */}
         </button>
 
         <div className='flex justify-center mt-10'>
