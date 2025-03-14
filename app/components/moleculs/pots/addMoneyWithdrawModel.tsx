@@ -1,6 +1,6 @@
 'use client';
 import { Progress } from '@/components/ui/progress';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { cn } from '@/lib/utils';
 import closeSvg from '@/public/assets/close.svg';
 import Image from 'next/image';
@@ -15,7 +15,7 @@ interface IPot {
 interface AddWithdrawModalProps {
   title: string;
   pot: IPot;
-  handleNewTotal: React.Dispatch<React.SetStateAction<number | undefined>>;
+  handleNewTotal: Dispatch<SetStateAction<number | undefined>>;
   newTotal: number | undefined;
 }
 

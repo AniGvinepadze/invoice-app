@@ -10,7 +10,7 @@ import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { IViewerPot } from './potsContent';
+
 import axios from 'axios';
 import { IPots } from '@/app/(dashboard)/pots/page';
 import closeSvg from '@/public/assets/close.svg';
@@ -18,8 +18,8 @@ import Image from 'next/image';
 
 interface IDeleteModal {
   handleValue: Dispatch<SetStateAction<string | undefined>>;
-  handleViewerPot: React.Dispatch<React.SetStateAction<IPots | null>>;
-  viewerPot: IViewerPot;
+  handleViewerPot: Dispatch<SetStateAction<IPots | undefined>>;
+  viewerPot: IPots;
 }
 
 const EditModal: React.FC<IDeleteModal> = ({
@@ -47,6 +47,7 @@ const EditModal: React.FC<IDeleteModal> = ({
   };
 
   const token = getCookie('accessToken');
+  console.log(viewerPot, 'dataaasssssssssssa');
 
   const onsubmit = async (data: any) => {
     const newPot: {
@@ -67,7 +68,7 @@ const EditModal: React.FC<IDeleteModal> = ({
             target: +data.target,
             theme: selectVal,
           }
-        : null
+        : undefined
     );
     const updatePot = async () => {
       try {

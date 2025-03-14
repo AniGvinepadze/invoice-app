@@ -11,12 +11,13 @@ import {
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { IPots } from '@/app/(dashboard)/pots/page';
+import { motion } from 'framer-motion';
 
 interface IBudget {
   handleNewPot: React.Dispatch<React.SetStateAction<IPots | undefined>>;
 }
 
-const BudgetModal: React.FC<IBudget> = ({ handleNewPot }) => {
+const PotsModal: React.FC<IBudget> = ({ handleNewPot }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { register, handleSubmit, control, reset } = useForm();
   const [selectedTheme, setSelectedTheme] = useState('');
@@ -39,7 +40,6 @@ const BudgetModal: React.FC<IBudget> = ({ handleNewPot }) => {
       theme: data.selectVal,
       total: 0,
     };
-    console.log(newPot);
 
     handleNewPot(newPot);
     // reset();
@@ -148,4 +148,4 @@ const BudgetModal: React.FC<IBudget> = ({ handleNewPot }) => {
   );
 };
 
-export default BudgetModal;
+export default PotsModal;
