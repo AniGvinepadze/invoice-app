@@ -1,345 +1,322 @@
 "use client";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Pagination from "@/app/components/moleculs/Transaction/Paginations";
+type SortType = "A" | "Z" | "High" | "Low" | "Latest";
 
-import React, { useEffect, useState, useMemo } from "react";
-import data from "../../transactions";
-import { BillType } from "@/app/bills";
-import Image from "next/image";
-import { filter1, filter2, search } from "@/app";
-
-interface Account {
-  name: string;
+interface Transaction {
+  sender: string;
   category: string;
-  transaction_date: string;
-  amount: string;
-  icon?: React.ReactNode;
+  date: string;
+  amount: number;
 }
 
-export default function Transition() {
-  const [accounts, setAccounts] = useState<Account[]>(data);
-  const [filteredAccounts, setFilteredAccounts] = useState<Account[]>(data);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [sortBy, setSortBy] = useState<string>("Latest");
-  const [category, setCategory] = useState<string>("All Transactions");
-  const [transactionType, setTransactionType] = useState<string>("All");
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const rowsPerPage = 10;
+export default function TransactionsPage() {
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const [sort, setSort] = useState<SortType>("Latest");
+  const [isSortVisible, setIsSortVisible] = useState(false);
+  const [isCategoryVisible, setIsCategoryVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setIsLoading] = useState<boolean>(false);
+  const [newTransaction, setNewTransaction] = useState<Transaction>({
+    sender: "",
+    category: "",
+    amount: 0,
+    date: "",
+  });
 
-  const filteredData = useMemo(() => {
-    let filtered = [...accounts];
+  const toggleSortVisibility = () => {
+    setIsSortVisible((prev) => !prev);
+  };
 
-    if (searchTerm) {
-      filtered = filtered.filter((account) =>
-        account.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const toggleCategoryVisibility = () => {
+    setIsCategoryVisible((prev) => !prev);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type } = e.target;
+    setNewTransaction({
+      ...newTransaction,
+      [e.target.name]: e.target.value,
+      [name]: type === "number" ? Number(value) || 0 : value,
+    });
+  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/transactions",
+
+        newTransaction
       );
-    }
-
-    if (category !== "All Transactions") {
-      filtered = filtered.filter((account) => account.category === category);
-    }
-
-    if (transactionType !== "All") {
-      filtered = filtered.filter((account) =>
-        transactionType === "Income"
-          ? account.amount.startsWith("+")
-          : !account.amount.startsWith("+")
-      );
-    }
-
-    switch (sortBy) {
-      case "Latest":
-        filtered.sort(
-          (a, b) =>
-            new Date(b.transaction_date).getTime() -
-            new Date(a.transaction_date).getTime()
-        );
-        break;
-      case "Oldest":
-        filtered.sort(
-          (a, b) =>
-            new Date(a.transaction_date).getTime() -
-            new Date(b.transaction_date).getTime()
-        );
-        break;
-      case "A to Z":
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "Z to A":
-        filtered.sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      case "Lowest":
-        filtered.sort(
-          (a, b) =>
-            parseFloat(a.amount.replace(/[^0-9.-]+/g, "")) -
-            parseFloat(b.amount.replace(/[^0-9.-]+/g, ""))
-        );
-        break;
-      case "Highest":
-        filtered.sort(
-          (a, b) =>
-            parseFloat(b.amount.replace(/[^0-9.-]+/g, "")) -
-            parseFloat(a.amount.replace(/[^0-9.-]+/g, ""))
-        );
-        break;
-      default:
-        break;
-    }
-
-    return filtered;
-  }, [accounts, searchTerm, sortBy, category, transactionType]);
-
-  useEffect(() => {
-    setFilteredAccounts(filteredData);
-    setCurrentPage(1);
-  }, [filteredData]);
-
-  const indexOfLastRow = currentPage * rowsPerPage;
-  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = filteredAccounts.slice(indexOfFirstRow, indexOfLastRow);
-  const totalPages = Math.ceil(filteredAccounts.length / rowsPerPage);
-
-  const handlePageChange = (page: number) => {
-    if (page > 0 && page <= totalPages) {
-      setCurrentPage(page);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error creating transaction:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (loading) {
+    }
+  }, [loading]);
+
+  // if (loading) {
+  //   return <Spinner />;
+  // }
+
   return (
-    <div className="flex flex-col items-center  h-screen p-6">
-      <h2 className="font-bold text-[32px] p-4 w-full mb-6">Transactions</h2>
-      <div className="bg-white max-w-[1060px] w-full rounded-xl  max-h-[960px] h-full overflow-y-auto p-4">
-        <div className="flex items-center justify-between w-full mb-4 p-4  rounded-md max-1300:flex-wrap max-450:p-0">
-          <div className="flex items-center border rounded-lg p-3 ">
-            <input
-              type="text"
-              placeholder="Search transaction..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="rounded-lg "
-            />
-            <button className="text-gray-500">
-              <Image src={search} alt="searchicon" width={16} height={16} />
-            </button>
-          </div>
-
-          <div className="flex items-center mx-4 max-600:mx-0">
-            <label className="mr-3 text-[#696868] font-normal text-sm max-600:hidden">
-              Sort by
-            </label>
-
-            <button
-              value={sortBy}
-              className="cursor-pointer hidden max-600:flex"
-              onChange={(e) => setSortBy("latest")}
-            >
-              <Image
-                src={filter1}
-                alt="filtericon"
-                width={25}
-                height={25}
-                className="max-400:mt-6"
-              />
-            </button>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="border rounded-lg px-3 py-2 cursor-pointer  text-[#696868] font-normal text-sm max-600:hidden"
-            >
-              <option
-                value="Latest"
-                className="text-base text-[#696868] font-medium "
-              >
-                Latest
-              </option>
-              <option
-                value="Oldest"
-                className="text-base text-[#696868] font-medium"
-              >
-                Oldest
-              </option>
-              <option
-                value="A to Z"
-                className="text-base text-[#696868] font-medium"
-              >
-                A to Z
-              </option>
-              <option
-                value="Z to A"
-                className="text-base text-[#696868] font-medium"
-              >
-                Z to A
-              </option>
-              <option
-                value="Highest"
-                className="text-base text-[#696868] font-medium"
-              >
-                Highest
-              </option>
-              <option
-                value="Lowest"
-                className="text-base text-[#696868] font-medium"
-              >
-                Lowest
-              </option>
-            </select>
-          </div>
-
-          <div className="flex items-center ">
-            <label className="mr-3 text-[#696868] font-normal text-sm max-600:hidden">
-              Category
-            </label>
-            <button
-              value={sortBy}
-              className="cursor-pointer hidden max-600:flex"
-              onChange={(e) => setSortBy("latest")}
-            >
-              <Image
-                src={filter2}
-                alt="filtericon"
-                width={25}
-                height={25}
-                className="max-400:mt-6 max-400:mr-32"
-              />
-            </button>
-
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="border rounded-lg px-3 py-2 max-600:hidden"
-            >
-              <option
-                value="All Transactions"
-                className="text-base text-[#696868] font-medium"
-              >
-                All Transactions
-              </option>
-              {Array.from(
-                new Set(accounts.map((account) => account.category))
-              ).map((cat, index) => (
-                <option
-                  key={index}
-                  value={cat}
-                  className="text-base text-[#696868] font-medium"
-                >
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex items-center max-1300:my-4 ">
-            <label className="mr-3 text-[#696868] font-normal text-sm max-600:hidden">
-              Transaction Type
-            </label>
-            <select
-              value={transactionType}
-              onChange={(e) => setTransactionType(e.target.value)}
-              className="border rounded-lg px-3 py-2 max-600:hidden"
-            >
-              <option
-                value="All"
-                className="text-base text-[#696868] font-medium"
-              >
-                All
-              </option>
-              <option
-                value="Income"
-                className="text-base text-[#696868] font-medium"
-              >
-                Income
-              </option>
-              <option
-                value="Expense"
-                className="text-base text-[#696868] font-medium"
-              >
-                Expense
-              </option>
-            </select>
-          </div>
+    <div className="p-8 w-full overflow-x-hidden overflow-scroll h-screen  ">
+      <div className="mx-auto sm:mb-10 lg:mb-[0px]">
+        <div className="flex  justify-between">
+          <h2 className="font-publicSans font-bold sm:text-3xl md:text-4xl text-[#201F24] mb-6">
+            Transactions
+          </h2>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-black h-[53px] text-white px-6 py-3 rounded-lg"
+          >
+            + Add Transaction
+          </button>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="table-auto w-full ">
-            <thead>
-              <tr className="max-600:hidden">
-                <th className="p-5 text-left text-sm text-[#696868] font-medium">
-                  Recipient / Sender
-                </th>
-                <th className="p-5 text-left text-sm text-[#696868] font-medium">
-                  Category
-                </th>
-                <th className="p-5 text-left text-sm text-[#696868] font-medium">
-                  Transaction Date
-                </th>
-                <th className="p-5 text-left text-sm text-[#696868] font-medium">
-                  Amount
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentRows.map((account, index) => (
-                <tr
-                  key={index}
-                  className="rounded-xl hover:bg-gray-50 transition-colors ease-in-out duration-300 "
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg max-w-[560px] ml-6 mr-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-publicSans font-bold text-[32px] leading-[38px] text-[#201F24]  max-ss:text-[20px] ">
+                  Add New Transaction
+                </h3>
+                {/* <Image
+                  onClick={() => setIsModalOpen(false)}
+                  className=" text-red-500 hover:text-red- cursor-pointer"
+                  src="rame"
+                  width={32}
+                  height={32}
+                  alt="close btn"
+                ></Image> */}
+              </div>
+              <p className="mb-[20px] font-publicSans font-normal text-[14px] leading-[21px] text-[#696868]">
+                By creating a transaction, you’ll be able to get insights into
+                your spending habits. Stay on top of your budget and take
+                control of your finances!
+              </p>
+              <form onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  name="sender"
+                  placeholder="Recipient or Sender"
+                  value={newTransaction.sender}
+                  onChange={handleInputChange}
+                  className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+                  required
+                />
+                <select
+                  onChange={(e) => {
+                    const updatedCategory = e.target.value;
+                    setNewTransaction((prevTransaction) => ({
+                      ...prevTransaction,
+                      category: updatedCategory,
+                    }));
+                  }}
+                  name="category"
+                  id="category"
+                  className=" md:flex w-full p-2 mb-4 border border-gray-300 rounded-md"
+                  value={newTransaction.category}
+                  required
                 >
-                  <td className="flex ">
-                    <div className="max-w-[40px] w-full rounded-md bg-gray-100 p-2 my-3 max-400:mt-3">
-                      {" "}
-                      {account.icon}
+                  <option value="">Choose Category</option>
+                  <option value="Entertainment">Entertainment</option>
+                  <option value="Bills">Bills</option>
+                  <option value="Groceries">Groceries</option>
+                  <option value="Dining Out">Dining Out</option>
+                  <option value="Transportation">Transportation</option>
+                  <option value="Personal">Personal Care</option>
+                </select>
+                <input
+                  type="date"
+                  name="date"
+                  placeholder="date"
+                  value={newTransaction.date}
+                  onChange={handleInputChange}
+                  className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+                  required
+                />
+
+                <input
+                  type="number"
+                  name="amount"
+                  placeholder="Amount"
+                  value={newTransaction.amount}
+                  onChange={handleInputChange}
+                  className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="bg-black h-[53px] w-full text-white px-6 py-3 rounded-lg"
+                >
+                  Add Transaction
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+        <div>
+          <div className="flex justify-between mb-6 items-center">
+            <div className="flex-1 md:max-w-[320px]">
+              <input
+                type="text"
+                className="border border-gray-300 rounded-md p-3  h-12 focus:outline-none focus:ring-2 focus:ring-blue-500 w-[100%] md:min-w-[195px]  "
+                placeholder="Search transaction"
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-6 items-center">
+              <div>
+                <label
+                  htmlFor="sortBy"
+                  className="text-sm font-medium text-gray-700 sm:hidden md:flex"
+                >
+                  Sort By
+                </label>
+                {/* <Image
+                  src={"rame"}
+                  width={15}
+                  height={15}
+                  alt="sortButton"
+                  className=" ml-5 sm:flex md:hidden cursor-pointer"
+                  onClick={toggleSortVisibility}
+                ></Image> */}
+                {isSortVisible && (
+                  <div className=" md:hidden absolute mt-2 bg-white shadow-md border rounded-md">
+                    <div
+                      className="p-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => setSort("Latest")}
+                    >
+                      Latest
                     </div>
-                    <p className="m-4 font-semibold text-base text-[#575656] max-400:text-sm max-400:mt-6">
-                      {account.name}
-                    </p>
-                  </td>
-                  <td className="px-5 py-2 text-[#696868] font-normal text-sm max-600:hidden">
-                    {account.category}
-                  </td>
-                  <td className="px-5 py-2 text-[#696868] font-normal text-sm max-600:hidden">
-                    {account.transaction_date}
-                  </td>
-                  <td
-                    className={`px-4 py-2 font-semibold text-base max-400:text-sm ${
-                      account.amount.startsWith("+")
-                        ? "text-green-500"
-                        : "text-black"
-                    }`}
-                  >
-                    {account.amount}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="flex justify-between mt-12">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            className="px-4 py-2 text-[#201F24] cursor-pointer border border-[#98908B] rounded-md mx-1 hover:bg-[#e3e2e1] transition-colors ease-in-out duration-300 disabled:opacity-50 max-550:px-2 "
-            disabled={currentPage === 1}
-          >
-            Prev
-          </button>
-          <div>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => handlePageChange(i + 1)}
-                className={`px-4 py-2 text-[#201F24] cursor-pointer border border-[#98908B] rounded-md mx-1 hover:bg-[#e3e2e1] transition-colors ease-in-out duration-300 disabled:opacity-50 max-550:px-2 max-400:my-1 ${
-                  currentPage === i + 1 ? "bg-[#201F24] text-white" : ""
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
+                    <div
+                      className="p-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => setSort("A")}
+                    >
+                      A to Z
+                    </div>
+                    <div
+                      className="p-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => setSort("Z")}
+                    >
+                      Z to A
+                    </div>
+                    <div
+                      className="p-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => setSort("High")}
+                    >
+                      Highest
+                    </div>
+                    <div
+                      className="p-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => setSort("Low")}
+                    >
+                      Lowest
+                    </div>
+                  </div>
+                )}
+                <select
+                  onChange={(e) => setSort(e.target.value as SortType)}
+                  name="price"
+                  id="price"
+                  className=" sm:hidden md:flex w-32 h-12 border border-gray-300 rounded-md mt-2 text-gray-600 bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 ml-[8px]"
+                >
+                  <option value="Latest">Latest</option>
+                  <option value="A">A to Z</option>
+                  <option value="Z">Z to A</option>
+                  <option value="High">Highest</option>
+                  <option value="Low">Lowest</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  htmlFor="category"
+                  className="text-sm font-medium text-gray-700 sm:hidden md:flex"
+                >
+                  Category
+                </label>
+                {/* <Image
+                  src={"rame"}
+                  width={15}
+                  height={15}
+                  alt="sortButton"
+                  className="sm:flex md:hidden cursor-pointer mr-5"
+                  onClick={toggleCategoryVisibility}
+                ></Image> */}
+                {isCategoryVisible && (
+                  <div className="md:hidden absolute mt-2 bg-white shadow-md border rounded-md">
+                    <div
+                      className="p-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => setCategory("Entertainment")}
+                    >
+                      Entertainment
+                    </div>
+                    <div
+                      className="p-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => setCategory("Bills")}
+                    >
+                      Bills
+                    </div>
+                    <div
+                      className="p-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => setCategory("Groceries")}
+                    >
+                      Groceries
+                    </div>
+                    <div
+                      className="p-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => setCategory("Dining Out")}
+                    >
+                      Dining Out
+                    </div>
+                    <div
+                      className="p-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => setCategory("Transportation")}
+                    >
+                      Transportation
+                    </div>
+                    <div
+                      className="p-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => setCategory("Personal")}
+                    >
+                      Personal Care
+                    </div>
+                  </div>
+                )}
+                <select
+                  onChange={(e) => setCategory(e.target.value)}
+                  name="Category"
+                  id="Category"
+                  className=" sm:hidden md:flex w-40 h-12 border border-gray-300 rounded-md mt-2 text-gray-600 bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 ml-[8px]"
+                >
+                  <option value="">All Transaction</option>
+                  <option value="Entertainment">Entertainment</option>
+                  <option value="Bills">Bills</option>
+                  <option value="Groceries">Groceries</option>
+                  <option value="Dining Out">Dining Out</option>
+                  <option value="Transportation">Transportation</option>
+                  <option value="Personal">Personal Care</option>
+                </select>
+              </div>
+            </div>
           </div>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            className="px-4 py-2 text-[#201F24] cursor-pointer border border-[#98908B] rounded-md mx-1 hover:bg-[#e3e2e1] transition-colors ease-in-out duration-300 disabled:opacity-50 max-550:px-2 "
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
+          <div className="flex justify-between py-4 px-6 text-sm font-semibold text-gray-600 border-b border-gray-200 pb-4 mb-6 sm:hidden md:flex">
+            <h3 className="md:w-[240px] lg:w-[428px]">Recipient / Sender</h3>
+            <h3 className="w-[120px]">Category</h3>
+            <h3>Transaction Date</h3>
+            <h3>Amount</h3>
+          </div>
+          <Pagination search={search} sort={sort} category={category} />
         </div>
       </div>
     </div>

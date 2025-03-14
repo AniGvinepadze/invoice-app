@@ -9,7 +9,7 @@ const Login = () => {
       <div>
         <LoginHeader />
       </div>
-      <div className="flex h-screen   p-3 gap-4 items-center justify-center">
+      <div className="flex h-screen  gap-4 items-center justify-center">
         <LogingIcon />
         <LoginFormFields />
       </div>

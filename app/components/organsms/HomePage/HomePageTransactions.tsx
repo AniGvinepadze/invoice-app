@@ -1,35 +1,80 @@
-import React from "react";
-import Link from "next/link";
-import { transaction } from "@/app/map";
+"use client";
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import axios from "axios";
+import { IPots } from "@/app/(dashboard)/pots/page";
 
 export default function HomePageTransactions() {
+  const [potsData, setPostsData] = useState<IPots[]>([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  type Transaction = {
+    id: string;
+    sender: string;
+    amount: number;
+    date: string;
+  };
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/transactions")
+      .then((response) => {
+        const filteredData = response.data.slice(0, 5);
+        setTransactions(filteredData);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  const router = useRouter();
+
+  const fetchData = async () => {
+    try {
+      const res = await axios.get("/pots");
+      setPostsData(res.data);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
-    <div className="max-w-[1000px] w-full bg-white p-8 rounded-xl my-10">
-      <div className="flex justify-between">
-        <h2 className="font-bold text-xl ">Transacitions</h2>
-        <div>
-          <Link href="/transactions">
-            <p className="font-normal text-sm text-[#696868] hover:text-[#a3a2a2] transition ease-in-out duration-200">
-              View more
-            </p>
-          </Link>
+    <div className="grow basis-[608px] mt-8">
+      <div className="bg-[#FFFFFF] p-[32px] rounded-xl flex-1 mt-[24px]">
+        <div className="flex justify-between">
+          <h5 className="text-[#201F24] text-[20px] font-bold leading-6">
+            Transactions
+          </h5>
+          <button className="text-[#696868] font-normal">View All</button>
         </div>
-      </div>
-      <div className="mt-8">
-        {transaction.map((el) => (
-          <div key={el.id}>
-            <div className="flex justify-between">
-              <p className="font-bold text-sm mt-4">{el.name}</p>
-              <div className="flex flex-col ">
-                <p className="text-[#277C78] font-bold text-sm my-2">
-                  {el.budget}
-                </p>
-                <p className="font-normal text-sm text-[#696868]">{el.date}</p>
+        <div className="mt-[35px] flex flex-col gap-[20px]">
+          {transactions.map((user, index) => (
+            <div
+              key={index}
+              className="flex justify-between items-center py-4 md:px-6 bg-white shadow-sm rounded-lg hover:bg-gray-50 transition ease-in-out"
+            >
+              <div className="flex items-center space-x-3  md:w-[240px] lg:w-[428px]">
+                <h3 className="font-medium text-gray-800">{user.sender}</h3>
+              </div>
+              <div className="w-full flex flex-col items-end">
+                <h3 className="font-semibold text-gray-800">{user.amount}$</h3>
+                <h3 className="text-gray-600">
+                  {new Date(user.date).toISOString().split("T")[0]}
+                </h3>
               </div>
             </div>
-            <div className="w-full bg-[#F2F2F2] h-[1px] my-5" />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
