@@ -1,53 +1,62 @@
 'use client';
 
 import React from 'react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from 'recharts';
 
-interface ChartData {
-  browser: string;
-  visitors: number;
-  color: string;
+interface ChartProps {
+  chart: Record<string, number>;
 }
 
-const chartData: ChartData[] = [
-  { browser: 'Entertainment', visitors: 50.0, color: '#277C78' },
-  { browser: 'Bills', visitors: 750.0, color: '#82C9D7' },
-  { browser: 'Dining Out', visitors: 75.0, color: '#F2CDAC' },
-  { browser: 'Personal Care', visitors: 100.0, color: '#626070' },
-];
+const PieChartComponent: React.FC<ChartProps> = ({ chart }) => {
+  const chartData = Object.keys(chart).map((key) => ({
+    category: key,
+    value: chart[key],
+  }));
 
-const PieChartComponent: React.FC = () => {
-  const totalVisitors = React.useMemo(
-    () => chartData.reduce((acc, curr) => acc + curr.visitors, 0),
-    []
-  );
+  const totalValue = chartData.reduce((acc, item) => acc + item.value, 0);
+
+  const colors = [
+    '#277C78',
+    '#82C9D7',
+    '#F2CDAC',
+    '#626070',
+    '#FF7F50',
+    '#FFD700',
+    '#FF1730',
+    '#277d23',
+    '#272c23',
+  ];
 
   return (
-    <div style={{ maxWidth: 300 }}>
-      <div style={{ position: "relative", height: "300px" }}>
-        <ResponsiveContainer width="100%" height="100%">
-
+    <div style={{ maxWidth: 400 }}>
+      <div style={{ position: 'relative', height: '300px' }}>
+        <ResponsiveContainer width='100%' height='100%'>
           <PieChart>
             <Pie
               data={chartData}
-              dataKey='visitors'
-              nameKey='browser'
+              dataKey='value'
+              nameKey='category'
               cx='50%'
-              innerRadius={93}
-              outerRadius={150}
-              paddingAngle={1}
+              innerRadius={80}
+              outerRadius={120}
+              paddingAngle={2}
             >
               {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={colors[index % colors.length]}
+                />
               ))}
             </Pie>
-
-            <Tooltip
-              formatter={(value: number) => `$${value}`}
-              contentStyle={{
-                borderRadius: '50px',
-              }}
-            />
+            <Tooltip formatter={(value: number) => `$${value}`} />
+            {/* <Legend /> */}
           </PieChart>
         </ResponsiveContainer>
 
@@ -62,15 +71,15 @@ const PieChartComponent: React.FC = () => {
         >
           <span
             style={{
-              fontSize: '30px',
+              fontSize: '24px',
               fontWeight: 'bold',
               marginBottom: '6px',
             }}
           >
-            $338
+            ${totalValue}
           </span>
           <br />
-          <span style={{ color: '#6b7280' }}>of ${totalVisitors} limit </span>
+          <span style={{ color: '#6b7280' }}>Total Expenses</span>
         </div>
       </div>
     </div>
