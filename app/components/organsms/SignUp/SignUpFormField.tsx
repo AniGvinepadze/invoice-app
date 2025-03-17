@@ -28,7 +28,7 @@ export default function SignUpFormFields() {
       setError(null);
 
       if (res.status === 201) {
-        router.push("/login");
+        router.push("/verify");
       }
     } catch (err: any) {
       setError(err.response.data.message);
