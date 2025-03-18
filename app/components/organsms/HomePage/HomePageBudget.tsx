@@ -56,7 +56,7 @@ export default function HomePageBudget() {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 1, delay: 1.5 }}
       viewport={{ once: true }}
-      className="max-w-[1000px] w-full bg-white rounded-xl mb-10 p-7 max-1050:mt-10"
+      className="max-w-[1000px  w-full bg-white rounded-xl mb-10 p-7 max-1050:mt-10"
     >
       <div className="flex justify-between">
         <h2 className="font-bold text-xl">Budget</h2>
@@ -74,8 +74,8 @@ export default function HomePageBudget() {
 
         <div className="flex flex-col">
           {budget.map((el) => (
-            <div key={el.id} className="flex gap-7 my-2">
-              <div>
+            <div key={el.id} className="flex gap-7 my-2 ">
+              <div className='max-w-[6px]'>
                 <Image src={el.img} alt={el.title} width={24} height={24} />
               </div>
               <div>

@@ -119,7 +119,7 @@ export default function HomePageBalance() {
         </div>
       </div>
 
-      <div className="flex sm:flex-col md:!flex-row justify-between md:space-x-4 sm:gap-[12px] md:gap-0">
+      <div className="flex justify-between md:space-x-4 sm:gap-[12px] md:gap-0 max-650:flex-col">
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -141,7 +141,7 @@ export default function HomePageBalance() {
           viewport={{
             once: true,
           }}
-          className="bg-[#FFFFFF] p-[24px] rounded-xl flex-1"
+          className="bg-[#FFFFFF] p-[24px] rounded-xl flex-1 max:max-650:my-4"
         >
           <h5 className="text-[14px] font-normal text-[#696868]">Income</h5>
           <h3 className="text-[32px] font-bold leading-8 text-[#201F24] mt-[12px]">
