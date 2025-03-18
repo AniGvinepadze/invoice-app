@@ -1,14 +1,13 @@
 "use client";
 
-import { useForm } from 'react-hook-form';
-import Link from 'next/link';
-import { useRouter ,useSearchParams} from 'next/navigation';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { setCookie } from 'cookies-next';
-// import google from '/public/assets/googlee.jpg';
-import Image from 'next/image';
-
+import { useForm } from "react-hook-form";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { setCookie } from "cookies-next";
+import google from "../../../../public/assets/googlee.jpg";
+import Image from "next/image";
 
 export type FormData = {
   email: string;
@@ -19,10 +18,8 @@ export type FormData = {
 export default function LoginFormFields() {
   const [err, setError] = useState<null | string>(null);
 
-
   const router = useRouter();
-  const searchParams = useSearchParams(); 
-
+  const searchParams = useSearchParams();
 
   const {
     register,
@@ -30,14 +27,13 @@ export default function LoginFormFields() {
     formState: { errors },
   } = useForm<FormData>();
 
-
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const token = searchParams.get('token');
+    const token = searchParams.get("token");
 
     if (token) {
-      setCookie('accessToken', token, { maxAge: 60 * 60 });
-      router.push('/home');
+      setCookie("accessToken", token, { maxAge: 60 * 60 });
+      router.push("/home");
     }
   }, []);
 
@@ -58,14 +54,14 @@ export default function LoginFormFields() {
   };
 
   useEffect(() => {
-    const token = searchParams.get("token"); 
+    const token = searchParams.get("token");
     if (token) {
       getCurrentUser(token);
       setCookie("accessToken", token, { maxAge: 60 * 60 });
 
       router.push("/home");
     }
-  }, [searchParams]); 
+  }, [searchParams]);
 
   const onSubmit = async (formData: FormData) => {
     setError(null);
@@ -87,10 +83,8 @@ export default function LoginFormFields() {
   };
 
   const signInWithGoogle = () => {
-    window.location.href = 'http://localhost:3001/auth/google';
+    window.location.href = "http://localhost:3001/auth/google";
   };
-
-;
 
   return (
     <div className="max-w-[600px] w-full m-32 max-1200:m-20 max-1100:m-16 max-550:m-6 max-400:m-3">
@@ -117,14 +111,12 @@ export default function LoginFormFields() {
                     if (!domain) return "Invalid Email Format";
                     return blackList.includes(domain)
                       ? "BlackListed Email"
-
                       : true;
                   },
                 },
               })}
             />
             {errors.email && (
-
               <p className="text-red-600 text-xs italic">
                 {errors.email.message}
               </p>
@@ -142,7 +134,6 @@ export default function LoginFormFields() {
                 required: {
                   value: true,
                   message: "Password is required",
-
                 },
               })}
             />
@@ -151,30 +142,33 @@ export default function LoginFormFields() {
                 {errors.password.message}
               </p>
             )}
-            {err && (
-              <p className="text-red-500 text-xs italic">{err}</p>
-            )}
+            {err && <p className="text-red-500 text-xs italic">{err}</p>}
           </div>
 
           <div>
-            <button              className='w-full bg-[#201F24] text-normal font-semibold mt-8 text-white flex justify-center p-[13px] rounded-lg cursor-pointer hover:bg-[#696868] transition-colors ease-in-out duration-300'
-              type='submit'
-
+            <button
+              className="w-full bg-[#201F24] text-normal font-semibold mt-8 text-white flex justify-center p-[13px] rounded-lg cursor-pointer hover:bg-[#696868] transition-colors ease-in-out duration-300"
+              type="submit"
             >
               Login
             </button>
           </div>
         </form>
 
-        <div className='flex justify-center mt-10'>
         <button
           className="flex justify-center mt-6 gap-4 items-center w-full bg-white border border-[#201F24] rounded-lg p-2 cursor-pointer transition-colors ease-in-out duration-300"
           onClick={signInWithGoogle}
         >
-      <p className="font-semibold text-normal ml-2 hover:text-[#201F24] cursor-pointer transition-colors ease-in-out duration-200 max-400:ml-0  ">
+          <p className="font-semibold text-normal ml-2 hover:text-[#201F24] cursor-pointer transition-colors ease-in-out duration-200 max-400:ml-0  ">
             Sign In With Google
           </p>
-          {/* <Image src={google} alt="google" width={30} height={30} className="object-contain max-400:w-[24px] max-400:h-[24px] max-300:w-[20px]  max-300:h-[20px]" /> */}
+          <Image
+            src={google}
+            alt="google"
+            width={30}
+            height={30}
+            className="object-contain max-400:w-[24px] max-400:h-[24px] max-300:w-[20px]  max-300:h-[20px]"
+          />
         </button>
 
         <div className="flex justify-center mt-10">
@@ -189,7 +183,6 @@ export default function LoginFormFields() {
           </p>
         </div>
       </div>
-    </div>
     </div>
   );
 }
