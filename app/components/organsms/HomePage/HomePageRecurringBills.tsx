@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
 import axios from "axios";
-
+import { motion } from "framer-motion";
 export default function HomePageRecurringBills() {
   const router = useRouter();
   const handleClickBills = () => {
@@ -54,7 +54,15 @@ export default function HomePageRecurringBills() {
   }
 
   return (
-    <div className="grow basis-[428px] relative -z-10">
+    <motion.div
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 2 }}
+      viewport={{
+        once: true,
+      }}
+      className="grow basis-[428px] relative -z-10"
+    >
       <div className="mt-8 flex flex-col w-full space-y-6 ">
         <div className="bg-[#FFFFFF] p-[32px] md:h-[410px] h-[466px] rounded-xl flex-1">
           <div className="flex justify-between mb-3">
@@ -90,6 +98,6 @@ export default function HomePageRecurringBills() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

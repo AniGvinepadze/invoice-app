@@ -3,10 +3,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { dollarIcon } from "@/app";
 import { pot } from "@/app/map";
-
+import {motion} from "framer-motion"
 export default function HomePagePots() {
   return (
-    <div className="max-w-[1000px] w-full bg-white p-7 rounded-xl ">
+    <motion.div
+      className="max-w-[1000px] w-full bg-white p-7 rounded-xl "
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 1.5 }}
+      viewport={{
+        once: true,
+      }}
+    >
       <div className="flex justify-between">
         <p className="font-bold text-xl ">Pots</p>
         <Link href="/pots">
@@ -46,6 +54,6 @@ export default function HomePagePots() {
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

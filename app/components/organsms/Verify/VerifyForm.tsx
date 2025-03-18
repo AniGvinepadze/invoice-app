@@ -1,45 +1,31 @@
 "use client";
 
-import { useForm } from 'react-hook-form';
-import Link from 'next/link';
-import { useRouter ,useSearchParams} from 'next/navigation';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { setCookie } from 'cookies-next';
-// import google from '/public/assets/googlee.jpg';
-import Image from 'next/image';
-
+import { useForm } from "react-hook-form";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation"; 
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { setCookie } from "cookies-next";
+import google from "../../../../public/assets/googlee.jpg";
+import Image from "next/image";
 
 export type FormData = {
   email: string;
-  password: string;
+  otpCode: string;
   fullName?: string;
 };
 
-export default function LoginFormFields() {
+export default function VerifyForm() {
   const [err, setError] = useState<null | string>(null);
-
 
   const router = useRouter();
   const searchParams = useSearchParams(); 
-
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
-
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const token = searchParams.get('token');
-
-    if (token) {
-      setCookie('accessToken', token, { maxAge: 60 * 60 });
-      router.push('/home');
-    }
-  }, []);
 
   const getCurrentUser = async (token: string) => {
     try {
@@ -67,11 +53,12 @@ export default function LoginFormFields() {
     }
   }, [searchParams]); 
 
+
   const onSubmit = async (formData: FormData) => {
     setError(null);
     try {
       const res = await axios.post(
-        "http://localhost:3001/auth/sign-in",
+        "http://localhost:3001/auth/verify",
         formData
       );
       setError(null);
@@ -79,25 +66,20 @@ export default function LoginFormFields() {
       if (res.status === 201) {
         setCookie("accessToken", res.data.accessToken, { maxAge: 60 * 60 });
 
-        router.push("/home");
+        router.push("/login");
       }
     } catch (err: any) {
       setError(err.response.data.message);
     }
   };
 
-  const signInWithGoogle = () => {
-    window.location.href = 'http://localhost:3001/auth/google';
-  };
-
-;
 
   return (
     <div className="max-w-[600px] w-full m-32 max-1200:m-20 max-1100:m-16 max-550:m-6 max-400:m-3">
       <div className="shadow-md bg-white rounded-xl p-6 text-[#696868]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div>
-            <h2 className="font-publicSans font-bold text-2xl">Login</h2>
+            <h2 className="font-publicSans font-bold text-2xl">Verify</h2>
           </div>
 
           <div className="flex flex-col mt-8">
@@ -117,14 +99,12 @@ export default function LoginFormFields() {
                     if (!domain) return "Invalid Email Format";
                     return blackList.includes(domain)
                       ? "BlackListed Email"
-
                       : true;
                   },
                 },
               })}
             />
             {errors.email && (
-
               <p className="text-red-600 text-xs italic">
                 {errors.email.message}
               </p>
@@ -133,22 +113,21 @@ export default function LoginFormFields() {
 
           <div className="flex flex-col mt-3">
             <label htmlFor="input" className="text-normal font-semibold my-3">
-              Password
+              otpCode
             </label>
             <input
               type="password"
               className="w-full h-[45px] rounded-lg border border-[#696868] p-2"
-              {...register("password", {
+              {...register("otpCode", {
                 required: {
                   value: true,
                   message: "Password is required",
-
                 },
               })}
             />
-            {errors.password && (
+            {errors.otpCode && (
               <p className="text-red-500 text-xs italic">
-                {errors.password.message}
+                {errors.otpCode.message}
               </p>
             )}
             {err && (
@@ -157,39 +136,24 @@ export default function LoginFormFields() {
           </div>
 
           <div>
-            <button              className='w-full bg-[#201F24] text-normal font-semibold mt-8 text-white flex justify-center p-[13px] rounded-lg cursor-pointer hover:bg-[#696868] transition-colors ease-in-out duration-300'
-              type='submit'
-
+            <button
+              className="w-full bg-[#201F24] text-normal font-semibold mt-8 text-white flex justify-center p-[13px] rounded-lg cursor-pointer hover:bg-[#696868] transition-colors ease-in-out duration-300"
+              type="submit"
             >
-              Login
+              Verify
             </button>
           </div>
-        </form>
-
-        <div className='flex justify-center mt-10'>
-        <button
-          className="flex justify-center mt-6 gap-4 items-center w-full bg-white border border-[#201F24] rounded-lg p-2 cursor-pointer transition-colors ease-in-out duration-300"
-          onClick={signInWithGoogle}
-        >
-      <p className="font-semibold text-normal ml-2 hover:text-[#201F24] cursor-pointer transition-colors ease-in-out duration-200 max-400:ml-0  ">
-            Sign In With Google
-          </p>
-          {/* <Image src={google} alt="google" width={30} height={30} className="object-contain max-400:w-[24px] max-400:h-[24px] max-300:w-[20px]  max-300:h-[20px]" /> */}
-        </button>
-
-        <div className="flex justify-center mt-10">
-          <p className="font-medium text-normal">
-            Need to create an account?
-            <Link
-              href="/signUp"
-              className="font-semibold text-normal ml-2 hover:text-[#201F24] cursor-pointer transition-colors ease-in-out duration-200 max-400:ml-0"
+          <Link href="resend-verification">
+          <button
+              className="w-full bg-[#201F24] text-normal font-semibold mt-8 text-white flex justify-center p-[13px] rounded-lg cursor-pointer hover:bg-[#696868] transition-colors ease-in-out duration-300"
             >
-              Sign Up
+              Resend Verification
+            </button>
             </Link>
-          </p>
-        </div>
+        </form>
+      
+        
       </div>
-    </div>
     </div>
   );
 }

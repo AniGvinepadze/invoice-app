@@ -1,6 +1,6 @@
-import LoginHeader from '../../atoms/LoginHeader/LoginHeader';
-import LogingIcon from '../../atoms/LoginIcon/LoginIcon.';
-import SignUpFormFields from './SignUpFormField';
+import LoginHeader from "../../atoms/LoginHeader/LoginHeader";
+import LogingIcon from "../../atoms/LoginIcon/LoginIcon.";
+import SignUpFormFields from "./SignUpFormField";
 
 const SignUp = () => {
   return (
@@ -8,7 +8,7 @@ const SignUp = () => {
       <div>
         <LoginHeader />
       </div>
-      <div className='flex h-screen   p-3 gap-4 items-center justify-center'>
+      <div className="flex h-screen p-3  gap-4 items-center justify-center">
         <LogingIcon />
         <SignUpFormFields />
       </div>

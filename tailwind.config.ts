@@ -79,6 +79,12 @@ export default {
   			},
   			'max-400': {
   				max: '400px'
+  			},
+			'max-350': {
+  				max: '350px'
+  			},
+			'max-300': {
+  				max: '300px'
   			}
   		},
   		backgroundColor: {

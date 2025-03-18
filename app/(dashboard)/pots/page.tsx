@@ -1,12 +1,12 @@
-'use client';
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { getCookie } from 'cookies-next';
-import axios from 'axios';
+"use client";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getCookie } from "cookies-next";
+import axios from "axios";
 
-import PotsContent from '@/app/components/moleculs/pots/potsContent';
-import { motion } from 'framer-motion';
-import PotsModal from '@/app/components/organsms/PotsModal/PotsModal';
+import PotsContent from "@/app/components/moleculs/pots/potsContent";
+import { motion } from "framer-motion";
+import PotsModal from "@/app/components/organsms/PotsModal/PotsModal";
 
 export interface IPots {
   potName: string;
@@ -17,7 +17,7 @@ export interface IPots {
 }
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
 
 const fetchPots = async (token: string): Promise<IPots[] | undefined> => {
   try {
@@ -26,14 +26,14 @@ const fetchPots = async (token: string): Promise<IPots[] | undefined> => {
     });
     return res.data;
   } catch (e) {
-    console.error('Error fetching pots:', e);
+    console.error("Error fetching pots:", e);
     return undefined;
   }
 };
 
 const getCurrentUser = async (token: string, router: any, setUser: any) => {
   if (!token) {
-    router.push('/login');
+    router.push("/login");
     return;
   }
   try {
@@ -42,8 +42,8 @@ const getCurrentUser = async (token: string, router: any, setUser: any) => {
     });
     setUser(response.data);
   } catch (err) {
-    console.error('Error fetching current user:', err);
-    router.push('/login');
+    console.error("Error fetching current user:", err);
+    router.push("/login");
   }
 };
 
@@ -57,7 +57,7 @@ const createPot = async (
     });
     return res.data;
   } catch (e) {
-    console.error('Error adding pot:', e);
+    console.error("Error adding pot:", e);
     return undefined;
   }
 };
@@ -69,7 +69,7 @@ function Pots() {
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const token = getCookie('accessToken') as string;
+  const token = getCookie("accessToken") as string;
 
   useEffect(() => {
     getCurrentUser(token, router, setUser);
@@ -92,7 +92,7 @@ function Pots() {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedPots = await fetchPots(token);
-      console.log(fetchedPots, 'etch');
+
       if (fetchedPots) {
         setPots(fetchedPots.reverse());
       }
@@ -103,7 +103,7 @@ function Pots() {
   }, [token]);
 
   if (!user) {
-    return null;
+    return <div>Redirecting...</div>;
   }
 
   if (isLoading) {
@@ -111,29 +111,27 @@ function Pots() {
   }
 
   return (
-    <div className='px-10 pt-8 pb-[48px] w-full overflow-x-hidden overflow-y-auto h-screen'>
-      <div className='flex justify-between items-center'>
+    <div className="px-10 pt-8 pb-[48px] w-full overflow-x-hidden overflow-y-auto h-screen">
+      <div className="flex justify-between items-center">
         <motion.h1
-          className='font-bold text-3xl'
+          className="font-bold text-3xl"
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.1 }}
-          viewport={{
-            once: true,
-          }}
+          viewport={{ once: true }}
         >
           Pots
         </motion.h1>
+
         <PotsModal handleNewPot={setNewPot} />
       </div>
+
       <motion.div
-        className='grid mt-8 grid-cols-1 xl:grid-cols-2 gap-6 justify-between '
+        className="grid mt-8 grid-cols-1 xl:grid-cols-2 gap-6 justify-between"
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.4 }}
-        viewport={{
-          once: true,
-        }}
+        viewport={{ once: true }}
       >
         {pots.length > 0 ? (
           pots.map((pot) => (
@@ -144,7 +142,7 @@ function Pots() {
             />
           ))
         ) : (
-          <div className='col-span-2 text-center text-gray-500'>
+          <div className="col-span-2 text-center text-gray-500">
             No pots found. Create a new pot to get started!
           </div>
         )}

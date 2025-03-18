@@ -8,7 +8,8 @@ import { useEffect, useState } from 'react';
 export default function Home() {
   const [user, setUser] = useState();
   const router = useRouter();
-
+  
+  const token = getCookie('accessToken');
   const getCurrentUser = async (token: string) => {
     try {
       const response = await axios.get(
@@ -19,16 +20,16 @@ export default function Home() {
           },
         }
       );
+      console.log("shemovuda")
       setUser(response.data);
     } catch (err) {
       router.push('/login');
     }
   };
-
   useEffect(() => {
-    const token = getCookie('accessToken');
     getCurrentUser(token as string);
   }, []);
+
 
   if (!user) return null;
   return (

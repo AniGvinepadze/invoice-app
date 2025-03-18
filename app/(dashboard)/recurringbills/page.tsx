@@ -53,7 +53,6 @@ export default function RecurringBills() {
             headers: { authorization: `Bearer ${token}` },
           }
         );
-        console.log(response.data, "response.dataresponse.data");
         setBills(response.data);
       } catch (err) {
         console.error("Error fetching bills:", err);
@@ -83,22 +82,49 @@ export default function RecurringBills() {
   return (
     <div className="w-full overflow-x-hidden overflow-scroll h-screen py-6 px-4 sm:pt-8 sm:pb-24 sm:px-8 bg-[#F8F4F0]">
       <div className="w-full mb-8 flex sm:flex-row flex-col gap-y-2 justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Recurring Bills</h2>
+        <motion.h2
+          className="text-[32px] font-bold text-gray-900"
+          initial={{ opacity: 1, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.1 }}
+          viewport={{
+            once: true,
+          }}
+        >
+          Recurring Bills
+        </motion.h2>
         <AddNewBill handleClickShow={handleClickShow} />
       </div>
 
-      <div className="w-full flex flex-col gap-6 sm:flex-col md:flex-row">
-        <div className="flex flex-col gap-6 w-full max-w-[337px] sm:max-w-none md:max-w-[337px]">
-          <div className="p-6 h-[190px] bg-gray-900 rounded-lg">
+      <div className="w-full flex flex-raw gap-6 max-1250:flex-col">
+     <div className="max-w-[900px] w-full flex flex-col  max-1250:flex">
+        <div className="flex flex-col gap-6 w-full  ">
+          <motion.div
+            className="p-6 h-[190px] bg-gray-900 rounded-lg"
+            initial={{ opacity: 0, x: -100 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            viewport={{
+              once: true,
+            }}
+          >
             <div className="h-[70px] flex flex-col justify-between">
               <span className="text-sm text-white">Total Bills</span>
               <span className="text-2xl text-white font-bold">
                 ${totalBills}
               </span>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="bg-white h-[190px] rounded-lg p-5">
+          <motion.div
+            className="bg-white h-[190px] rounded-lg p-5"
+            initial={{ opacity: 0, x: -100 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            viewport={{
+              once: true,
+            }}
+          >
             <h5 className="text-lg text-gray-900 font-bold mb-5">Summary</h5>
             {[
               { label: "Amount Spent", value: amountSpent },
@@ -113,11 +139,20 @@ export default function RecurringBills() {
                 <span className="font-bold text-gray-900">${value}</span>
               </div>
             ))}
-          </div>
+          </motion.div>
         </div>
 
-        <div className="w-full rounded-lg p-8 bg-white">
-          <div className="flex justify-between gap-2 mb-5">
+        </div>
+        <motion.div
+          className="w-full max-w-[1440px] rounded-lg p-8 bg-white"
+          initial={{ opacity: 0, x: 100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          viewport={{
+            once: true,
+          }}
+        >
+          <div className="flex justify-between gap-2 mb-5 max-500:flex-col">
             <input
               className="w-full h-12 pl-2 text-sm border border-gray-300 rounded-md outline-none"
               placeholder="Search bills"
@@ -136,19 +171,26 @@ export default function RecurringBills() {
             </select>
           </div>
 
-          <div className="hidden sm:flex justify-between text-sm">
-            <span>Bill Title</span>
-            <div className="flex justify-between gap-2">
-              <span>Due Date</span>
-              <span>Amount</span>
+          <div className="hidden sm:flex justify-between text-sm my-10">
+            <span className="text-base font-semibold ">Bill Title</span>
+            <div className=" flex max-w-[280px] w-full justify-evenly">
+              <span className="text-base font-semibold ">Due Date</span>
+              <span className="text-base font-semibold ">Amount</span>
             </div>
           </div>
 
           <BillsList inputValue={value} option={option} bills={bills} />
-        </div>
+        </motion.div>
       </div>
 
-      {show && <ReccuirngBillPopUp setShow={setShow} addBill={addBill} />}
+      {show && (
+        <ReccuirngBillPopUp
+          setShow={setShow}
+          addBill={addBill}
+          bills={bills}
+          setBills={setBills}
+        />
+      )}
     </div>
   );
 }

@@ -50,7 +50,15 @@ export default function HomePageTransactions() {
 
   return (
     <div className="grow basis-[608px] mt-8">
-      <div className="bg-[#FFFFFF] p-[32px] rounded-xl flex-1 mt-[24px]">
+      <motion.div
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 1.9 }}
+        viewport={{
+          once: true,
+        }}
+        className="bg-[#FFFFFF] p-[32px] rounded-xl flex-1 mt-[24px]"
+      >
         <div className="flex justify-between">
           <h5 className="text-[#201F24] text-[20px] font-bold leading-6">
             Transactions
@@ -75,7 +83,7 @@ export default function HomePageTransactions() {
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
