@@ -6,8 +6,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { setCookie } from "cookies-next";
-import google from "../../../../public/assets/googlee.jpg";
-import Image from "next/image";
 
 export type FormData = {
   email: string;

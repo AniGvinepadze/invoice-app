@@ -1,6 +1,5 @@
 import React from "react";
 import LogingIcon from "../../atoms/LoginIcon/LoginIcon.";
-
 import LoginHeader from "../../atoms/LoginHeader/LoginHeader";
 import VerifyForm from "./VerifyForm";
 
