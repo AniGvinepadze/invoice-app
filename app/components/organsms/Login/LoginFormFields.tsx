@@ -27,15 +27,15 @@ export default function LoginFormFields() {
     formState: { errors },
   } = useForm<FormData>();
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const token = searchParams.get("token");
+  // useEffect(() => {
+  //   const searchParams = new URLSearchParams(window.location.search);
+  //   const token = searchParams.get("token");
 
-    if (token) {
-      setCookie("accessToken", token, { maxAge: 60 * 60 });
-      router.push("/");
-    }
-  }, []);
+  //   if (token) {
+  //     setCookie("accessToken", token, { maxAge: 60 * 60 });
+  //     router.push("/");
+  //   }
+  // }, []);
 
   const getCurrentUser = async (token: string) => {
     try {
@@ -58,8 +58,8 @@ export default function LoginFormFields() {
     if (token) {
       getCurrentUser(token);
       setCookie("accessToken", token, { maxAge: 60 * 60 });
-
-      router.push("/home");
+      console.log("shem,opbda");
+      router.push("/");
     }
   }, [searchParams]);
 

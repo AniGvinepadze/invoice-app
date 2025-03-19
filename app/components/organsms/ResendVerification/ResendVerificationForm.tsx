@@ -24,32 +24,6 @@ export default function ResendVerificationForm() {
     formState: { errors },
   } = useForm<FormData>();
 
-//   const getCurrentUser = async (token: string) => {
-//     try {
-//       const response = await axios.get(
-//         "http://localhost:3001/auth/current-user",
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
-//         }
-//       );
-//       return response.data;
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     const token = searchParams.get("token"); 
-//     if (token) {
-//       getCurrentUser(token);
-//       setCookie("accessToken", token, { maxAge: 60 * 60 });
-
-//       router.push("/home");
-//     }
-//   }, [searchParams]); 
-
 
   const onSubmit = async (formData: FormData) => {
     setError(null);
