@@ -75,6 +75,7 @@ export default function LoginFormFields() {
       if (res.status === 201) {
         setCookie("accessToken", res.data.accessToken, { maxAge: 60 * 60 });
 
+        
         router.push("/");
       }
     } catch (err: any) {
