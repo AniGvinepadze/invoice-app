@@ -189,6 +189,7 @@ export default function RecurringBills() {
           addBill={addBill}
           bills={bills}
           setBills={setBills}
+          show={show}
         />
       )}
     </div>

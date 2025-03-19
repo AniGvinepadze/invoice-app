@@ -16,7 +16,7 @@ import {
 } from ".";
 
 export const sidebar = [
-  { id: 1, title: "Overview", img: home, activeImg: activeome, route: "/home" },
+  { id: 1, title: "Overview", img: home, activeImg: activeome, route: "/" },
   {
     id: 2,
     title: "Transactions",

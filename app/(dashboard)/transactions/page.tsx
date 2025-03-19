@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Pagination from "@/app/components/moleculs/Transaction/Paginations";
 type SortType = "A" | "Z" | "High" | "Low" | "Latest";
@@ -26,6 +26,8 @@ export default function TransactionsPage() {
     date: "",
   });
 
+
+  const modalRef = useRef<HTMLDivElement>(null);
   const toggleSortVisibility = () => {
     setIsSortVisible((prev) => !prev);
   };
@@ -67,6 +69,21 @@ export default function TransactionsPage() {
   // if (loading) {
   //   return <Spinner />;
   // }
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        setIsModalOpen(false);
+      }
+    }
+
+    if (isModalOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isModalOpen]);
 
   return (
     <div className="p-8 w-full overflow-x-hidden overflow-scroll h-screen  ">
@@ -77,7 +94,7 @@ export default function TransactionsPage() {
           </h2>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-black h-[53px] text-white px-6 py-3 rounded-lg"
+            className="bg-black h-[53px] text-white px-6 py-3 rounded-lg  hover:bg-gray-700 transition-all ease-in-out duration-300"
           >
             + Add Transaction
           </button>
@@ -85,19 +102,12 @@ export default function TransactionsPage() {
 
         {isModalOpen && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-8 rounded-lg shadow-lg max-w-[560px] ml-6 mr-6">
+            <div ref={modalRef}  className="bg-white p-8 rounded-lg shadow-lg max-w-[560px] ml-6 mr-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-publicSans font-bold text-[32px] leading-[38px] text-[#201F24]  max-ss:text-[20px] ">
                   Add New Transaction
                 </h3>
-                {/* <Image
-                  onClick={() => setIsModalOpen(false)}
-                  className=" text-red-500 hover:text-red- cursor-pointer"
-                  src="rame"
-                  width={32}
-                  height={32}
-                  alt="close btn"
-                ></Image> */}
+           
               </div>
               <p className="mb-[20px] font-publicSans font-normal text-[14px] leading-[21px] text-[#696868]">
                 By creating a transaction, you’ll be able to get insights into
@@ -157,7 +167,7 @@ export default function TransactionsPage() {
                 />
                 <button
                   type="submit"
-                  className="bg-black h-[53px] w-full text-white px-6 py-3 rounded-lg"
+                  className="bg-black h-[53px] w-full text-white px-6 py-3 rounded-lg  hover:bg-gray-700 transition-all ease-in-out duration-300"
                 >
                   Add Transaction
                 </button>
@@ -183,14 +193,6 @@ export default function TransactionsPage() {
                 >
                   Sort By
                 </label>
-                {/* <Image
-                  src={"rame"}
-                  width={15}
-                  height={15}
-                  alt="sortButton"
-                  className=" ml-5 sm:flex md:hidden cursor-pointer"
-                  onClick={toggleSortVisibility}
-                ></Image> */}
                 {isSortVisible && (
                   <div className=" md:hidden absolute mt-2 bg-white shadow-md border rounded-md">
                     <div
@@ -245,14 +247,7 @@ export default function TransactionsPage() {
                 >
                   Category
                 </label>
-                {/* <Image
-                  src={"rame"}
-                  width={15}
-                  height={15}
-                  alt="sortButton"
-                  className="sm:flex md:hidden cursor-pointer mr-5"
-                  onClick={toggleCategoryVisibility}
-                ></Image> */}
+                
                 {isCategoryVisible && (
                   <div className="md:hidden absolute mt-2 bg-white shadow-md border rounded-md">
                     <div

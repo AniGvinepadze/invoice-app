@@ -33,7 +33,7 @@ export default function LoginFormFields() {
 
     if (token) {
       setCookie("accessToken", token, { maxAge: 60 * 60 });
-      router.push("/home");
+      router.push("/");
     }
   }, []);
 
@@ -75,7 +75,7 @@ export default function LoginFormFields() {
       if (res.status === 201) {
         setCookie("accessToken", res.data.accessToken, { maxAge: 60 * 60 });
 
-        router.push("/home");
+        router.push("/");
       }
     } catch (err: any) {
       setError(err.response.data.message);

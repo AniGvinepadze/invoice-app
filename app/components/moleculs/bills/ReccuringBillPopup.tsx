@@ -3,19 +3,20 @@
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const ReccuirngBillPopUp = ({
   setShow,
   addBill,
   bills,
-  setBills
-
+  setBills,
+  show,
 }: {
-  bills: any[]
+  bills: any[];
   setShow: any;
   addBill: any;
-  setBills:any
+  setBills: any;
+  show: any;
 }) => {
   const [user, setUser] = useState();
   const [formData, setFormData] = useState({
@@ -24,6 +25,29 @@ const ReccuirngBillPopUp = ({
     bill_amount: "",
   });
 
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Close modal when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setShow(false);
+      }
+    }
+
+    if (show) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [show]);
   const handleClickDisappear = () => setShow(false);
 
   const router = typeof window !== "undefined" ? useRouter() : null;
@@ -47,8 +71,8 @@ const ReccuirngBillPopUp = ({
     ) {
       return;
     }
-    
-     try {
+
+    try {
       const response = await axios.post(
         "http://localhost:3001/reccuringbills",
         {
@@ -69,30 +93,32 @@ const ReccuirngBillPopUp = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
-      const response = await axios.post("http://localhost:3001/reccuringbills", formData, {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      });
-  
-      const addedBill = response.data; 
-  
+      const response = await axios.post(
+        "http://localhost:3001/reccuringbills",
+        formData,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const addedBill = response.data;
+
       addBill(addedBill);
-    
+
       handleClickDisappear();
     } catch (e) {
       console.error("Error adding bill:", e);
     }
   };
-  
 
   useEffect(() => {
     const getCurrentUser = async () => {
       if (!token || !router) return;
       try {
-      
         const response = await axios.get(
           "http://localhost:3001/auth/current-user",
           {
@@ -122,13 +148,16 @@ const ReccuirngBillPopUp = ({
         console.error("Error fetching bills:", err);
       }
     };
-  
+
     fetchData();
-  }, [bills]); 
-  
+  }, [bills]);
+
   return (
     <div className="fixed z-10 inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-lg w-[560px] p-6">
+      <div
+        ref={modalRef}
+        className="bg-white rounded-lg shadow-lg w-[560px] p-6"
+      >
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold">Add New Bill</h2>
           <button
@@ -201,7 +230,7 @@ const ReccuirngBillPopUp = ({
           <div className="flex justify-end gap-4 mt-6">
             <button
               type="submit"
-              className="w-full bg-gray-900 text-white py-2 px-4 rounded-md"
+              className="w-full bg-gray-900 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition-all ease-in-out duration-300"
             >
               Add Bill
             </button>

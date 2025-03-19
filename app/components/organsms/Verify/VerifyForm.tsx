@@ -47,7 +47,7 @@ export default function VerifyForm() {
       getCurrentUser(token);
       setCookie("accessToken", token, { maxAge: 60 * 60 });
 
-      router.push("/home");
+      router.push("/");
     }
   }, [searchParams]); 
 

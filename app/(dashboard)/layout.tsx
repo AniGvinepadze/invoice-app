@@ -10,7 +10,7 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
 
-  const hideSidebarRoutes = ["/", "/signup"];
+  const hideSidebarRoutes = [ "/signup"];
   const showSidebar = !hideSidebarRoutes.includes(pathname);
   return (
     <>
