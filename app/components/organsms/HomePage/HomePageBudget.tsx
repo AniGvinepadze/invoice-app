@@ -60,7 +60,7 @@ export default function HomePageBudget() {
     >
       <div className="flex justify-between">
         <h2 className="font-bold text-xl">Budget</h2>
-        <Link href="/reccuringBills">
+        <Link href="/budgets">
           <p className="font-normal text-sm text-[#696868] hover:text-[#a3a2a2] transition ease-in-out duration-200">
             See Details
           </p>
@@ -68,11 +68,11 @@ export default function HomePageBudget() {
       </div>
 
       <div className="flex justify-center mt-10">
-        <div className="max-w-[400px] w-full mr-4">
+        <div className="max-w-[400px] w-full mr-4 max-500:hidden">
           <BudgetSection chart={budgetsTotal} />
         </div>
 
-        <div className="flex flex-col">
+        <div className="grid grid-cols-1 max-550:grid-cols-2 max-550:gap-6 max-550:text-center" >
           {budget.map((el) => (
             <div key={el.id} className="flex gap-7 my-2 ">
               <div className='max-w-[6px]'>

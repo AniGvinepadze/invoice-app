@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { IPots } from "@/app/(dashboard)/pots/page";
+import Link from "next/link";
 
 export default function HomePageTransactions() {
   const [potsData, setPostsData] = useState<IPots[]>([]);
@@ -60,10 +61,12 @@ export default function HomePageTransactions() {
         className="bg-[#FFFFFF] p-[32px] rounded-xl flex-1 mt-[24px]"
       >
         <div className="flex justify-between">
-          <h5 className="text-[#201F24] text-[20px] font-bold leading-6">
+          <h5 className="text-[#201F24] text-[20px] font-bold leading-6 max-400:text-lg">
             Transactions
           </h5>
-          <button className="text-[#696868] font-normal">View All</button>
+          <Link href="/transactions">
+          <button className="font-normal text-sm text-[#696868] hover:text-[#a3a2a2] transition ease-in-out duration-200">View All</button>
+          </Link>
         </div>
         <div className="mt-[35px] flex flex-col gap-[20px]">
           {transactions.map((user, index) => (

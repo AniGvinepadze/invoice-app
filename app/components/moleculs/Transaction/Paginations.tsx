@@ -132,35 +132,27 @@ export default function Pagination({
               custom={index}
               initial="hidden"
               animate="visible"
-              className="flex justify-between items-center py-4 md:px-6 bg-white shadow-sm rounded-lg hover:bg-gray-50 transition ease-in-out"
+              className="flex justify-between items-center py-4 px-6 bg-white shadow-sm rounded-lg hover:bg-gray-50 transition ease-in-out"
             >
               <div className="flex items-center space-x-3 md:w-[240px] lg:w-[428px]">
                 <div>
                   <h3 className="font-medium text-gray-800">
                     {transaction.sender}
                   </h3>
-                  <h3 className="text-gray-600 w-[120px] md:hidden sm:flex">
+                  <h3 className="text-gray-600 w-[120px] hidden max-800:flex  ">
                     {transaction.category}
                   </h3>
                 </div>
               </div>
-              <h3 className="text-gray-600 w-[120px] md:flex sm:hidden">
+              <h3 className="text-gray-600 w-[120px] flex max-800:hidden">
                 {transaction.category}
               </h3>
-              <h3 className="text-gray-600 sm:hidden md:flex">
-                {/* {transaction.date
-                  ? new Date(transaction.date).toISOString().split("T")[0]
-                  : "Invalid Date"} */}
-              </h3>
+             
               <div>
                 <h3 className="font-semibold text-gray-800">
                   {transaction.amount}$
                 </h3>
-                <h3 className="text-gray-600 md:hidden">
-                  {/* {transaction.date
-                    ? new Date(transaction.date).toISOString().split("T")[0]
-                    : "Invalid Date"} */}
-                </h3>
+      
               </div>
             </motion.div>
           ))

@@ -4,11 +4,9 @@ import { useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
 import axios from "axios";
 import { motion } from "framer-motion";
+import Link from "next/link";
 export default function HomePageRecurringBills() {
   const router = useRouter();
-  const handleClickBills = () => {
-    router.push("/recurringbills");
-  };
 
   const token = getCookie("accessToken");
   const [bills, setBills] = useState([]);
@@ -63,37 +61,39 @@ export default function HomePageRecurringBills() {
       }}
       className="grow basis-[428px] relative -z-10"
     >
-      <div className="mt-8 flex flex-col w-full space-y-6 ">
-        <div className="bg-[#FFFFFF] p-[32px] md:h-[410px] h-[466px] rounded-xl flex-1">
+      <div className="mt-8 flex flex-col w-full space-y-6">
+        <div className="bg-[#FFFFFF]  p-[32px] md:h-[410px] h-[466px] rounded-xl flex-1">
           <div className="flex justify-between mb-3">
-            <h5 className="text-[#201F24] text-[20px] font-bold leading-6">
+            <h5 className="text-[#201F24] text-[20px] font-bold leading-6 max-400:text-lg">
               Recurring Bills
             </h5>
-            <button
-              className="text-[#696868] font-normal"
-              onClick={handleClickBills}
-            >
-              See Details
-            </button>
+
+            <div>
+              <Link href="/budgets">
+                <p className="font-normal text-sm cursor-pointer text-[#696868] hover:text-[#a3a2a2] transition ease-in-out duration-200">
+                  See Details
+                </p>
+              </Link>
+            </div>
           </div>
-          <div className="flex flex-col gap-[30px] ">
+          <div className="flex flex-col gap-[30px] mt-10 ">
             <div className="flex justify-between items-center bg-[#F8F4F0] border-l-4 border-[#277C78] rounded-lg h-[61px] pl-[16px] pr-[16px]">
-              <h5 className="text-[#696868] text-[20px] font-normal leading-6">
+              <h5 className="text-[#696868] text-[20px] font-normal leading-6 max-400:text-base">
                 Paid Bills
               </h5>
-              <h5 className="font-bold text-[#201F24]">${amountSpent}</h5>
+              <h5 className="font-bold text-[#201F24]">$356</h5>
             </div>
             <div className="flex justify-between items-center bg-[#F8F4F0] border-l-4 border-[#F2CDAC] rounded-lg h-[61px] pl-[16px] pr-[16px]">
-              <h5 className="text-[#696868] text-[20px] font-normal leading-6">
+              <h5 className="text-[#696868] text-[20px] font-normal leading-6 max-400:text-base">
                 Total Upcoming
               </h5>
-              <h5 className="font-bold text-[#201F24]">${totalUpcoming}</h5>
+              <h5 className="font-bold text-[#201F24]">$243</h5>
             </div>
-            <div className="flex justify-between items-center bg-[#F8F4F0] border-l-4 border-[#82C9D7] rounded-lg h-[61px] pl-[16px] pr-[16px]">
-              <h5 className="text-[#696868] text-[20px] font-normal leading-6">
+            <div className="flex justify-between items-center bg-[#F8F4F0] border-l-4 border-[#82C9D7] rounded-lg h-[61px] pl-[16px] pr-[16px] ">
+              <h5 className="text-[#696868] text-[20px] font-normal leading-6 max-400:text-base">
                 Due Soon
               </h5>
-              <h5 className="font-bold text-[#201F24]">${dueSoon}</h5>
+              <h5 className="font-bold text-[#201F24]">$589</h5>
             </div>
           </div>
         </div>

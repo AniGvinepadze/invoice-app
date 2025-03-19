@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
 import { getCookie } from 'cookies-next';
 import axios from 'axios';
+import Link from 'next/link';
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
@@ -85,12 +86,12 @@ function budgets() {
   }, [budgets]);
 
   return (
-    <main className='px-10  pt-8 pb-[48px] w-full overflow-x-hidden overflow-scroll h-screen w'>
+    <main className=' max-w-[1440px] px-10  pt-8 pb-[48px] w-full overflow-x-hidden overflow-scroll h-screen w'>
       <div className='flex justify-between items-center'>
         <h1 className='font-bold text-3xl'>Budget</h1>
       </div>
       <div className='flex flex-col   sm:flex-col lg:flex-row gap-6 h-full'>
-        <div className='flex   bg-white lg:self-start self-center  rounded-xl px-[20px] py-4 lg:p-8 flex-col  sm:flex-row lg:flex-col justify-between mt-10'>
+        <div className='flex  bg-white lg:self-start self-center  rounded-xl px-[20px] py-4 lg:p-8 flex-col  sm:flex-row lg:flex-col justify-between mt-10 max-1300:hidden'>
           <div className=' w-full mr-4'>
             <BudgetSection chart={budgetsTotal} />
           </div>
@@ -117,12 +118,12 @@ function budgets() {
             )} */}
           </div>
         </div>
-        <div className='flex flex-col gap-6'>
-          <div className='flex-1  flex flex-col'>
+        <div className='flex flex-col gap-6 max-1300:w-full'>
+          <div className=' max-w-[1000px] w-full flex flex-col'>
             {Object.entries(groupedBudgets).map(([category, transactions]) => (
               <div
                 key={category}
-                className='flex bg-white rounded-xl px-[20px] py-4 lg:p-8 flex-col justify-between mt-10'
+                className='flex  max-w-[1000px] w-full bg-white rounded-xl px-[20px] py-4 lg:p-8 flex-col justify-between mt-10'
               >
                 <div className='flex items-center gap-4'>
                   <div className='w-4 h-4 bg-green-500 rounded-full'></div>
@@ -147,7 +148,7 @@ function budgets() {
                     <p className='font-bold text-base text-[#201f24]'>
                       Latest Spending
                     </p>
-                    <div className='text-[#696868] text-base'>See All</div>
+                    <Link href="/transactions" className='text-[#696868] text-base'>See All</Link>
                   </div>
                   {(Array.isArray(transactions) ? transactions : []).map(
                     (transaction) => (

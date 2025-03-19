@@ -97,7 +97,7 @@ export default function RecurringBills() {
       </div>
 
       <div className="w-full flex flex-raw gap-6 max-1250:flex-col">
-     <div className="max-w-[900px] w-full flex flex-col  max-1250:flex">
+     {/* <div className="max-w-[900px] w-full flex flex-col  max-1250:flex">
         <div className="flex flex-col gap-6 w-full  ">
           <motion.div
             className="p-6 h-[190px] bg-gray-900 rounded-lg"
@@ -142,7 +142,7 @@ export default function RecurringBills() {
           </motion.div>
         </div>
 
-        </div>
+        </div> */}
         <motion.div
           className="w-full max-w-[1440px] rounded-lg p-8 bg-white"
           initial={{ opacity: 0, x: 100 }}

@@ -71,8 +71,8 @@ export default function TransactionsPage() {
   return (
     <div className="p-8 w-full overflow-x-hidden overflow-scroll h-screen  ">
       <div className="mx-auto sm:mb-10 lg:mb-[0px]">
-        <div className="flex  justify-between">
-          <h2 className="font-publicSans font-bold sm:text-3xl md:text-4xl text-[#201F24] mb-6">
+        <div className="flex justify-between max-500:flex-col">
+          <h2 className="font-publicSans font-bold text-3xl md:text-4xl text-[#201F24] mb-6">
             Transactions
           </h2>
           <button
@@ -166,16 +166,16 @@ export default function TransactionsPage() {
           </div>
         )}
         <div>
-          <div className="flex justify-between mb-6 items-center">
-            <div className="flex-1 md:max-w-[320px]">
-              <input
+          <div className="flex justify-between m-6 mt-10 items-center max-800:m-0">
+            <div className="flex-1 max-w-[690px] max-800:w-[100%] ">
+              <input 
                 type="text"
-                className="border border-gray-300 rounded-md p-3  h-12 focus:outline-none focus:ring-2 focus:ring-blue-500 w-[100%] md:min-w-[195px]  "
+                className="border border-gray-300 rounded-md p-3  h-12 focus:outline-none focus:ring-2 focus:ring-blue-500  w-[100%]   max-800:my-5  "
                 placeholder="Search transaction"
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <div className="flex gap-6 items-center">
+            <div className="flex gap-6 items-center -mt-7 max-800:hidden">
               <div>
                 <label
                   htmlFor="sortBy"
@@ -310,10 +310,9 @@ export default function TransactionsPage() {
               </div>
             </div>
           </div>
-          <div className="flex justify-between py-4 px-6 text-sm font-semibold text-gray-600 border-b border-gray-200 pb-4 mb-6 sm:hidden md:flex">
+          <div className=" justify-between py-4 px-6 text-sm font-semibold text-gray-600 border-b border-gray-200 pb-4 mb-6 flex max-300:hidden">
             <h3 className="md:w-[240px] lg:w-[428px]">Recipient / Sender</h3>
-            <h3 className="w-[120px]">Category</h3>
-            <h3>Transaction Date</h3>
+            <h3 className="w-[120px] max-800:hidden">Category</h3>
             <h3>Amount</h3>
           </div>
           <Pagination search={search} sort={sort} category={category} />
