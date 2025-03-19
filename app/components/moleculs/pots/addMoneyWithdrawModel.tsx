@@ -1,7 +1,7 @@
 'use client';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { cn } from '@/lib/utils';
-import closeSvg from '/assets/close.svg';
+import closeSvg from '../../../../public/assets/close.svg';
 import Image from 'next/image';
 
 interface IPot {

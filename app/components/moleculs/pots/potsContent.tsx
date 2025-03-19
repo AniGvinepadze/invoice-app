@@ -2,8 +2,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
-import AddWithdrawModal from "./addMoneyWithdrawModel";
 import DeleteEditModal from "./deleteEditModal";
 import DeleteModal from "./deleteModal";
 import { IPots } from "@/app/(dashboard)/pots/page";
@@ -11,6 +9,7 @@ import { getCookie } from "cookies-next";
 import axios from "axios";
 import { motion } from "framer-motion";
 import EditModal from "./editModel";
+import AddWithdrawModal from "./addMoneyWithdrawModel";
 
 interface IProps {
   pot: IPots;

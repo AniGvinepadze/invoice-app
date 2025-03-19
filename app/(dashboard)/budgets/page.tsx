@@ -1,10 +1,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import BudgetSection from '@/app/components/moleculs/BudgetSection/BudgetSection';;
-import imageProf from '/assets/avatars/james-thompson.jpg';
+import imageProf from '../../../public/assets/avatars/james-thompson.jpg';
 import Image from 'next/image';
-
-import { Progress } from '@/components/ui/progress';
 import { getCookie } from 'cookies-next';
 import axios from 'axios';
 import Link from 'next/link';
