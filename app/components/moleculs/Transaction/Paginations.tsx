@@ -68,6 +68,8 @@ export default function Pagination({
           transactions.sort(
             (a, b) => parseFloat(b.amount) - parseFloat(a.amount)
           );
+
+
         } else if (sort === "Low") {
           transactions.sort(
             (a, b) => parseFloat(a.amount) - parseFloat(b.amount)
