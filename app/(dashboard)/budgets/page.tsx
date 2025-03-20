@@ -7,11 +7,12 @@ import { getCookie } from 'cookies-next';
 import axios from 'axios';
 import Link from 'next/link';
 
-const API_BASE_URL =  'https://invoiceappback.onrender.com';
+// const API_BASE_URL =
+//   process.env.NEXT_PUBLIC_API_BASE_URL || 'https://invoiceappback.onrender.com';
 
 const fetchPots = async (token: string) => {
   try {
-    const res = await axios.get(`${API_BASE_URL}/transactions`, {
+    const res = await axios.get( "https://invoiceappback.onrender.com/transactions", {
       headers: { authorization: `Bearer ${token}` },
     });
     return res.data;
@@ -28,7 +29,7 @@ export interface IBudget {
   sender: string;
   __v: number;
   _id: string;
-  theme?: string; // Add optional properties
+  theme?: string; 
   maximum?: number;
 }
 function budgets() {

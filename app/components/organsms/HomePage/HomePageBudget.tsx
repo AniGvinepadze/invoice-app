@@ -9,13 +9,17 @@ import { getCookie } from "cookies-next";
 import { IBudget } from "@/app/(dashboard)/budgets/page";
 import { motion } from "framer-motion";
 
-const API_BASE_URL = "https://invoiceappback.onrender.com/";
+// const API_BASE_URL =
+//   process.env.NEXT_PUBLIC_API_BASE_URL || 'https://invoiceappback.onrender.com';
 
 const fetchBudgets = async (token: string) => {
   try {
-    const res = await axios.get(`${API_BASE_URL}/transactions`, {
-      headers: { authorization: `Bearer ${token}` },
-    });
+    const res = await axios.get(
+      "https://invoiceappback.onrender.com/transactions",
+      {
+        headers: { authorization: `Bearer ${token}` },
+      }
+    );
     return res.data;
   } catch (e) {
     console.error("Error fetching budgets:", e);
