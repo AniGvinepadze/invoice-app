@@ -28,7 +28,7 @@ export default function VerifyForm() {
   const getCurrentUser = async (token: string) => {
     try {
       const response = await axios.get(
-        "http://localhost:3001/auth/current-user",
+        "https://invoiceappback.onrender.com/auth/current-user",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ export default function VerifyForm() {
     setError(null);
     try {
       const res = await axios.post(
-        "http://localhost:3001/auth/verify",
+        "https://invoiceappback.onrender.com/auth/verify",
         formData
       );
       setError(null);

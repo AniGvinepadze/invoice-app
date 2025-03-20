@@ -22,7 +22,7 @@ export default function SignUpFormFields() {
     setError(null);
     try {
       const res = await axios.post(
-        "http://localhost:3001/auth/sign-up",
+        "https://invoiceappback.onrender.com/auth/sign-up",
         formData
       );
       setError(null);
@@ -36,7 +36,7 @@ export default function SignUpFormFields() {
   };
   
   const signInWithGoogle = () => {
-    window.location.href = "http://localhost:3001/auth/google";
+    window.location.href = "https://invoiceappback.onrender.com/auth/google";
   };
 
 

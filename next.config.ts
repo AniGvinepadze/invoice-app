@@ -8,9 +8,9 @@ const nextConfig = {
         hostname: "lh3.googleusercontent.com",
       },
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "3001",
+        protocol: "https",
+        hostname: "invoiceappback.onrender.com",
+        port: "",
       },
     ],
   },

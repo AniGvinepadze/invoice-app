@@ -14,7 +14,7 @@ export default function HomePageRecurringBills() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/reccuringbills",
+          "https://invoiceappback.onrender.com/reccuringbills",
           {
             headers: {
               Authorization: `Bearer ${token}`,

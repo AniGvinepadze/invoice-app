@@ -73,7 +73,7 @@ const EditModal: React.FC<IDeleteModal> = ({
     const updatePot = async () => {
       try {
         await axios.patch(
-          `http://localhost:3001/pots/${viewerPot._id}`,
+          `https://invoiceappback.onrender.com/pots/${viewerPot._id}`,
           newPot,
           {
             headers: {

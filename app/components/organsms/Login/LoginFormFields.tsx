@@ -40,7 +40,7 @@ export default function LoginFormFields() {
   const getCurrentUser = async (token: string) => {
     try {
       const response = await axios.get(
-        "http://localhost:3001/auth/current-user",
+        "https://invoiceappback.onrender.com/auth/current-user",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -67,7 +67,7 @@ export default function LoginFormFields() {
     setError(null);
     try {
       const res = await axios.post(
-        "http://localhost:3001/auth/sign-in",
+        "https://invoiceappback.onrender.com/auth/sign-in",
         formData
       );
       setError(null);
@@ -84,7 +84,7 @@ export default function LoginFormFields() {
   };
 
   const signInWithGoogle = () => {
-    window.location.href = "http://localhost:3001/auth/google";
+    window.location.href = "https://invoiceappback.onrender.com/auth/google";
   };
 
   return (

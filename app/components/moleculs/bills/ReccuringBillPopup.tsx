@@ -74,7 +74,7 @@ const ReccuirngBillPopUp = ({
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/reccuringbills",
+        "https://invoiceappback.onrender.com/reccuringbills",
         {
           headers: {
             "Content-Type": "application/json",
@@ -96,7 +96,7 @@ const ReccuirngBillPopUp = ({
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/reccuringbills",
+        "https://invoiceappback.onrender.com/reccuringbills",
         formData,
         {
           headers: {
@@ -120,7 +120,7 @@ const ReccuirngBillPopUp = ({
       if (!token || !router) return;
       try {
         const response = await axios.get(
-          "http://localhost:3001/auth/current-user",
+          "https://invoiceappback.onrender.com/auth/current-user",
           {
             headers: { authorization: `Bearer ${token}` },
           }
@@ -138,7 +138,7 @@ const ReccuirngBillPopUp = ({
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/reccuringbills",
+          "https://invoiceappback.onrender.com/reccuringbills",
           {
             headers: { authorization: `Bearer ${token}` },
           }

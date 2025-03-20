@@ -29,7 +29,7 @@ export default function RecurringBills() {
 
       try {
         const response = await axios.get(
-          "http://localhost:3001/auth/current-user",
+          "https://invoiceappback.onrender.com/auth/current-user",
           {
             headers: { authorization: `Bearer ${token}` },
           }
@@ -48,7 +48,7 @@ export default function RecurringBills() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/reccuringbills",
+          "https://invoiceappback.onrender.com/reccuringbills",
           {
             headers: { authorization: `Bearer ${token}` },
           }

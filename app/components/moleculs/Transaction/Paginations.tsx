@@ -43,7 +43,7 @@ export default function Pagination({
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/transactions")
+      .get("https://invoiceappback.onrender.com/transactions")
       .then((response) => {
         response.data;
         let transactions: Transaction[] = response.data;

@@ -34,7 +34,7 @@ export default function HomePageBalance() {
 
   const getCurrentUser = async (token: string) => {
     try {
-      const res1 = await axios.get("http://localhost:3001/transactions");
+      const res1 = await axios.get("https://invoiceappback.onrender.com/transactions");
       const transactions = res1.data;
       const totalAmount = transactions.reduce(
         (sum: number, transaction: { amount: number }) =>
@@ -45,7 +45,7 @@ export default function HomePageBalance() {
       const initialBalance = 9597.25;
 
       setRemainingBalance(initialBalance - totalAmount);
-      const res2 = await axios.get("http://localhost:3001/auth/current-user", {
+      const res2 = await axios.get("https://invoiceappback.onrender.com/auth/current-user", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -60,16 +60,7 @@ export default function HomePageBalance() {
     }
   };
 
-  // const getAllUser = async(token:string) => {
-  //   const res = await axios.get('http://localhost:3001/users',{
-  //     headers:{
-  //       Authorization: `Bearer ${token}`
-  //     }
-  //   })
-  //   setUsers(res.data)
-  //   console.log(res.data,"resdata")
 
-  // }
 
   const signOut= () =>{
     deleteCookie('accessToken')

@@ -22,7 +22,7 @@ export default function HomePageTransactions() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/transactions")
+      .get("https://invoiceappback.onrender.com/transactions")
       .then((response) => {
         const filteredData = response.data.slice(0, 5);
         setTransactions(filteredData);

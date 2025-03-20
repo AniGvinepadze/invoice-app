@@ -29,7 +29,7 @@ export default function ResendVerificationForm() {
     setError(null);
     try {
       const res = await axios.post(
-        "http://localhost:3001/auth/resend-verification",
+        "https://invoiceappback.onrender.com/auth/resend-verification",
         formData
       );
       setError(null);

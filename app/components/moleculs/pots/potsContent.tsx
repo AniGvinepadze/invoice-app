@@ -56,7 +56,7 @@ const PotsContent: React.FC<IProps> = ({ pot, handleSetPots }) => {
       const newPot = { ...viewerPot, total: newTotal };
 
       try {
-        await axios.patch(`http://localhost:3001/pots/${pot._id}`, newPot, {
+        await axios.patch(`https://invoiceappback.onrender.com/pots/${pot._id}`, newPot, {
           headers: { authorization: `Bearer ${token}` },
         });
         setViewerPot(newPot);
@@ -74,7 +74,7 @@ const PotsContent: React.FC<IProps> = ({ pot, handleSetPots }) => {
   useEffect(() => {
     const deletePot = async () => {
       try {
-        await axios.delete(`http://localhost:3001/pots/${pot._id}`, {
+        await axios.delete(`https://invoiceappback.onrender.com/pots/${pot._id}`, {
           headers: { authorization: `Bearer ${token}` },
         });
         handleSetPots((prev) => prev?.filter((p) => p._id !== pot._id));

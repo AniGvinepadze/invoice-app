@@ -17,7 +17,7 @@ export interface IPots {
 }
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
+  process.env.NEXT_PUBLIC_API_BASE_URL || "https://invoiceappback.onrender.com";
 
 const fetchPots = async (token: string): Promise<IPots[] | undefined> => {
   try {
