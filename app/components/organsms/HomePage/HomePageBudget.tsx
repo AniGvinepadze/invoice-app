@@ -1,15 +1,15 @@
-'use client';
-import { budget } from '@/app/map';
-import Image from 'next/image';
-import Link from 'next/link';
-import BudgetSection from '../../moleculs/BudgetSection/BudgetSection';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { getCookie } from 'cookies-next';
-import { IBudget } from '@/app/(dashboard)/budgets/page';
-import { motion } from 'framer-motion';
+"use client";
+import { budget } from "@/app/map";
+import Image from "next/image";
+import Link from "next/link";
+import BudgetSection from "../../moleculs/BudgetSection/BudgetSection";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { getCookie } from "cookies-next";
+import { IBudget } from "@/app/(dashboard)/budgets/page";
+import { motion } from "framer-motion";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://invoiceappback.onrender.com/';
+const API_BASE_URL = "https://invoiceappback.onrender.com/";
 
 const fetchBudgets = async (token: string) => {
   try {
@@ -18,15 +18,17 @@ const fetchBudgets = async (token: string) => {
     });
     return res.data;
   } catch (e) {
-    console.error('Error fetching budgets:', e);
+    console.error("Error fetching budgets:", e);
     return undefined;
   }
 };
 
 export default function HomePageBudget() {
   const [budgets, setBudgets] = useState<IBudget[]>();
-  const [budgetsTotal, setBudgetsTotal] = useState<{ [key: string]: number }>({});
-  const token = getCookie('accessToken') as string;
+  const [budgetsTotal, setBudgetsTotal] = useState<{ [key: string]: number }>(
+    {}
+  );
+  const token = getCookie("accessToken") as string;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,10 +74,10 @@ export default function HomePageBudget() {
           <BudgetSection chart={budgetsTotal} />
         </div>
 
-        <div className="grid grid-cols-1 max-550:grid-cols-2 max-550:gap-6 max-550:text-center" >
+        <div className="grid grid-cols-1 max-550:grid-cols-2 max-550:gap-6 max-550:text-center">
           {budget.map((el) => (
             <div key={el.id} className="flex gap-7 my-2 ">
-              <div className='max-w-[6px]'>
+              <div className="max-w-[6px]">
                 <Image src={el.img} alt={el.title} width={24} height={24} />
               </div>
               <div>
