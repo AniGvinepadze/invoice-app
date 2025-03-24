@@ -17,7 +17,6 @@ export default function SignUpFormFields() {
     formState: { errors },
   } = useForm<FormData>();
 
-
   const onSubmit = async (formData: FormData) => {
     setError(null);
     try {
@@ -34,19 +33,15 @@ export default function SignUpFormFields() {
       setError(err.response.data.message);
     }
   };
-  
+
   const signInWithGoogle = () => {
     window.location.href = "https://invoiceappback.onrender.com/auth/google";
   };
 
-
   return (
     <div className="max-w-[600px] w-full m-32 max-1200:m-20 max-1100:m-16 max-550:m-6 max-400:m-3">
-      <div    className="shadow-md  max-w-[560px] w-full bg-white rounded-xl p-6  text-[#696868]">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-       
-        >
+      <div className="shadow-md  max-w-[560px] w-full bg-white rounded-xl p-6  text-[#696868]">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div>
             <h2 className="font-publicSans font-bold text-2xl">SignUp</h2>
           </div>
@@ -162,7 +157,13 @@ export default function SignUpFormFields() {
           <p className="font-semibold text-normal ml-2 hover:text-[#201F24] cursor-pointer transition-colors ease-in-out duration-200 max-400:ml-0  ">
             Sign Up With Google
           </p>
-          <Image src={google} alt="google" width={30} height={30} className="object-contain max-400:w-[24px] max-400:h-[24px] max-300:w-[20px]  max-300:h-[20px]" />
+          <Image
+            src={google}
+            alt="google"
+            width={30}
+            height={30}
+            className="object-contain max-400:w-[24px] max-400:h-[24px] max-300:w-[20px]  max-300:h-[20px]"
+          />
         </button>
 
         <div className="flex justify-center mt-6 ">
