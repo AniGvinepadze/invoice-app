@@ -1,6 +1,4 @@
-'use client';
-
-
+"use client";
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -8,15 +6,14 @@ import SideBar from "./components/organsms/SideBar/SideBar";
 import { usePathname } from "next/navigation";
 import MobileSideBar from "./components/organsms/SideBar/MobileSideBar";
 
-
 const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
 });
 
 export default function RootLayout({
@@ -26,20 +23,19 @@ export default function RootLayout({
 }>) {
   const pathName = usePathname();
 
-  const excludeSideBar = ['/login', '/signUp'];
+  const excludeSideBar = ["/login", "/signUp"];
 
   return (
-    <html lang='en'>
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F8F4F0] text-[#201F24] flex `}
       >
-        <div className='flex justify-between gap-5 w-full'>
+        <div className="flex justify-between gap-5 w-full">
           {/* <SideBar /> */}
 
           {children}
-       
+
           {!excludeSideBar.includes(pathName) && <MobileSideBar />}
-    
         </div>
       </body>
     </html>
